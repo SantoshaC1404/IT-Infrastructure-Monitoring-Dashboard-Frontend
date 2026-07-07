@@ -122,3 +122,72 @@ export const recentLogs = [
         time: "30 mins ago",
     },
 ];
+
+export const serverStatus = [
+    {
+        id: 1,
+        hostname: "Ubuntu-01",
+        ip: "192.168.1.101",
+        cpu: 42,
+        memory: 58,
+        disk: 70,
+        status: "online",
+    },
+    {
+        id: 2,
+        hostname: "Windows-01",
+        ip: "192.168.1.102",
+        cpu: 12,
+        memory: 32,
+        disk: 41,
+        status: "offline",
+    },
+    {
+        id: 3,
+        hostname: "Docker-Host",
+        ip: "192.168.1.103",
+        cpu: 64,
+        memory: 71,
+        disk: 80,
+        status: "warning",
+    },
+];
+
+export const diskData = [
+    {
+        name: "Used",
+        value: 72,
+    },
+    {
+        name: "Free",
+        value: 28,
+    },
+];
+
+export const networkData = [
+    {
+        time: "09:00",
+        incoming: 120,
+        outgoing: 90,
+    },
+    {
+        time: "10:00",
+        incoming: 150,
+        outgoing: 110,
+    },
+    {
+        time: "11:00",
+        incoming: 170,
+        outgoing: 130,
+    },
+    {
+        time: "12:00",
+        incoming: 140,
+        outgoing: 95,
+    },
+    {
+        time: "13:00",
+        incoming: 200,
+        outgoing: 150,
+    },
+];
