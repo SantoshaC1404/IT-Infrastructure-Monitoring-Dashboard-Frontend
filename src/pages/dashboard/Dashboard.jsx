@@ -1,8 +1,10 @@
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-5xl font-bold">Dashboard</h1>
-    </div>
+    <DashboardLayout>
+      <h1 className="text-3xl font-bold">Dashboard</h1>
+    </DashboardLayout>
   );
 };
 

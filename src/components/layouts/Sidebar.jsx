@@ -26,28 +26,43 @@ const menuItems = [
   { title: "Settings", path: "/settings", icon: FiSliders },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   return (
-    <aside className="hidden h-screen w-72 bg-slate-900 text-white lg:flex lg:flex-col">
-      {/* Logo */}
-      <div className="border-b border-slate-700 p-6">
-        <h1 className="text-xl font-bold">🛡 IT Monitor</h1>
+    <>
+      {/* Mobile Overlay */}
 
-        <p className="mt-1 text-sm text-slate-400">Infrastructure Dashboard</p>
-      </div>
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+        />
+      )}
 
-      {/* Navigation */}
-      <nav className="flex-1 space-y-2 p-4">
-        {menuItems.map((item) => (
-          <SidebarItem key={item.path} item={item} />
-        ))}
-      </nav>
+      <aside
+        className={`
+      fixed
+      left-0
+      top-0
+      z-50
+      h-screen
+      w-72
+      bg-slate-900
+      text-white
+      transform
+      transition-transform
+      duration-300
 
-      {/* Footer */}
-      <div className="border-t border-slate-700 p-5">
-        <p className="text-xs text-slate-400">Version 1.0.0</p>
-      </div>
-    </aside>
+      ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
+      lg:static
+      lg:translate-x-0
+      lg:flex
+      lg:flex-col
+    `}
+      >
+        {/* Existing Sidebar Content */}
+      </aside>
+    </>
   );
 };
 
