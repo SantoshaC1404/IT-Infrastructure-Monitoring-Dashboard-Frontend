@@ -6,7 +6,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import TablePagination from "./TablePagination";
 import Card from "./Card";
 
-const DataTable = ({ columns, data, renderActions }) => {
+const DataTable = ({ columns, data, renderActions, loading = false }) => {
   const [search, setSearch] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +25,10 @@ const DataTable = ({ columns, data, renderActions }) => {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage,
   );
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <Card>
@@ -59,13 +63,10 @@ const DataTable = ({ columns, data, renderActions }) => {
           </thead>
 
           <tbody>
-            {data.length === 0 ? (
+            {filteredData.length === 0 ? (
               <tr>
-                <td
-                  colSpan={columns.length + (renderActions ? 1 : 0)}
-                  className="py-10 text-center text-gray-500"
-                >
-                  No records found.
+                <td colSpan={columns.length + (renderActions ? 1 : 0)}>
+                  <EmptyState />
                 </td>
               </tr>
             ) : (
@@ -87,11 +88,14 @@ const DataTable = ({ columns, data, renderActions }) => {
             )}
           </tbody>
         </table>
-        <TablePagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
+
+        {totalPages > 1 && (
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
     </Card>
   );
