@@ -1,9 +1,10 @@
 import { FiMenu } from "react-icons/fi";
 
-import NotificationBell from "./NotificationBell";
+// import NotificationBell from "./NotificationBell";
 import ProfileMenu from "./ProfileMenu";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
+import NotificationBell from "../../notifications/components/NotificationBell";
 
 const Navbar = ({ onMenuClick }) => {
   return (
@@ -24,7 +25,7 @@ const Navbar = ({ onMenuClick }) => {
       <div className="flex items-center gap-4">
         <ThemeToggle />
 
-        <NotificationBell count={3} />
+        <NotificationBell />
 
         <ProfileMenu />
       </div>
