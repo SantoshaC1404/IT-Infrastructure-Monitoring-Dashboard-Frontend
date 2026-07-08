@@ -40,27 +40,43 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       <aside
         className={`
-      fixed
-      left-0
-      top-0
-      z-50
-      h-screen
-      w-72
-      bg-slate-900
-      text-white
-      transform
-      transition-transform
-      duration-300
-
-      ${isOpen ? "translate-x-0" : "-translate-x-full"}
-
-      lg:static
-      lg:translate-x-0
-      lg:flex
-      lg:flex-col
-    `}
+          fixed
+          inset-y-0
+          left-0
+          z-50
+          w-72
+          bg-slate-900
+          text-white
+          flex
+          flex-col
+          transition-transform
+          duration-300
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+          lg:static
+        `}
       >
         {/* Existing Sidebar Content */}
+        {/* Logo */}
+        <div className="border-b border-slate-700 p-6">
+          <h1 className="text-xl font-bold">🛡 IT Monitor</h1>
+
+          <p className="mt-1 text-sm text-slate-400">
+            Infrastructure Dashboard
+          </p>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-2 p-4">
+          {menuItems.map((item) => (
+            <SidebarItem key={item.path} item={item} />
+          ))}
+        </nav>
+
+        {/* Footer */}
+        <div className="border-t border-slate-700 p-5">
+          <p className="text-xs text-slate-400">Version 1.0.0</p>
+        </div>
       </aside>
     </>
   );

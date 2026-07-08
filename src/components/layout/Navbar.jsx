@@ -7,7 +7,7 @@ import ThemeToggle from "./ThemeToggle";
 
 const Navbar = ({ onMenuClick }) => {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm">
+    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm">
       {/* Left Section */}
       <div className="flex items-center gap-4">
         <button
