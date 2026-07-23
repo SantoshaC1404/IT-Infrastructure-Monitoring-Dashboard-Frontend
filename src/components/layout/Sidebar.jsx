@@ -15,7 +15,7 @@ import SidebarItem from "./SidebarItem";
 
 const menuItems = [
   { title: "Dashboard", path: "/dashboard", icon: FiHome },
-  { title: "Servers", path: "/servers", icon: FiServer },
+  { title: "Devices", path: "/devices", icon: FiServer },
   { title: "Docker", path: "/docker", icon: FiBox },
   { title: "Services", path: "/services", icon: FiSettings },
   { title: "Processes", path: "/processes", icon: FiCpu },
@@ -41,19 +41,22 @@ const Sidebar = ({ isOpen, onClose }) => {
       <aside
         className={`
           fixed
-          inset-y-0
+          top-0
           left-0
-          z-50
+          z-40
+          h-screen
           w-72
           bg-slate-900
           text-white
           flex
           flex-col
+          overflow-y-auto
           transition-transform
           duration-300
+
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
           lg:translate-x-0
-          lg:static
         `}
       >
         {/* Existing Sidebar Content */}
@@ -67,7 +70,8 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-2 p-4">
+        {/* <nav className="flex-1 space-y-2 p-4"> */}
+        <nav className="sidebar-scroll flex-1 overflow-y-auto space-y-2 p-4">
           {menuItems.map((item) => (
             <SidebarItem key={item.path} item={item} />
           ))}
