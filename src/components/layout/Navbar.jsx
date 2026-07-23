@@ -4,7 +4,7 @@ import { FiMenu } from "react-icons/fi";
 import ProfileMenu from "./ProfileMenu";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
-import NotificationBell from "../../notifications/components/NotificationBell";
+import NotificationBell from "../../features/notifications/components/NotificationBell";
 
 const Navbar = ({ onMenuClick }) => {
   return (
