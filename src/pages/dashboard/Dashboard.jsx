@@ -9,7 +9,7 @@ import NetworkChartCard from "../../components/charts/NetworkChartCard";
 
 import RecentAlerts from "../../components/dashboard/RecentAlerts";
 import RecentLogs from "../../components/dashboard/RecentLogs";
-import ServerStatusTable from "../../components/dashboard/ServerStatusTable";
+import DeviceStatusTable from "../../components/dashboard/DeviceStatusTable";
 
 import {
   statsCards,
@@ -19,7 +19,7 @@ import {
   networkData,
   recentAlerts,
   recentLogs,
-  serverStatus,
+  deviceStatus,
 } from "../../data/dashboardData";
 
 const Dashboard = () => {
@@ -61,9 +61,9 @@ const Dashboard = () => {
         <RecentLogs logs={recentLogs} />
       </div>
 
-      {/* Server Status */}
+      {/* Device Status */}
       <div className="mt-8">
-        <ServerStatusTable servers={serverStatus} />
+        <DeviceStatusTable devices={deviceStatus} />
       </div>
     </DashboardLayout>
   );
