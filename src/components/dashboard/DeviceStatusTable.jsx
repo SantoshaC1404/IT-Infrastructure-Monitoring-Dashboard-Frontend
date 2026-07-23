@@ -1,11 +1,11 @@
 import Card from "../common/Card";
 import StatusBadge from "../common/StatusBadge";
 
-const ServerStatusTable = ({ servers }) => {
+const DeviceStatusTable = ({ devices }) => {
   return (
     <Card>
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Server Status</h2>
+        <h2 className="text-lg font-semibold">Device Status</h2>
 
         <button className="text-sm font-medium text-blue-600 hover:underline">
           View All
@@ -26,20 +26,20 @@ const ServerStatusTable = ({ servers }) => {
           </thead>
 
           <tbody>
-            {servers.map((server) => (
-              <tr key={server.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium">{server.hostname}</td>
+            {devices.map((device) => (
+              <tr key={device.id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-3 font-medium">{device.hostname}</td>
 
-                <td className="px-4 py-3">{server.ip}</td>
+                <td className="px-4 py-3">{device.ip}</td>
 
-                <td className="px-4 py-3">{server.cpu}%</td>
+                <td className="px-4 py-3">{device.cpu}%</td>
 
-                <td className="px-4 py-3">{server.memory}%</td>
+                <td className="px-4 py-3">{device.memory}%</td>
 
-                <td className="px-4 py-3">{server.disk}%</td>
+                <td className="px-4 py-3">{device.disk}%</td>
 
                 <td className="px-4 py-3">
-                  <StatusBadge status={server.status} />
+                  <StatusBadge status={device.status} />
                 </td>
               </tr>
             ))}
@@ -50,4 +50,4 @@ const ServerStatusTable = ({ servers }) => {
   );
 };
 
-export default ServerStatusTable;
+export default DeviceStatusTable;

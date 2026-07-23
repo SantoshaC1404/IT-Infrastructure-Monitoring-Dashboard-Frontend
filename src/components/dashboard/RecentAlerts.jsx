@@ -21,7 +21,7 @@ const RecentAlerts = ({ alerts }) => {
             <div>
               <h3 className="font-medium text-gray-800">{alert.title}</h3>
 
-              <p className="text-sm text-gray-500">{alert.server}</p>
+              <p className="text-sm text-gray-500">{alert.device}</p>
 
               <p className="mt-1 text-xs text-gray-400">{alert.time}</p>
             </div>

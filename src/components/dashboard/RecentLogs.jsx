@@ -19,7 +19,7 @@ const RecentLogs = ({ logs }) => {
           >
             <h3 className="font-medium">{log.message}</h3>
 
-            <p className="text-sm text-gray-500">{log.server}</p>
+            <p className="text-sm text-gray-500">{log.device}</p>
 
             <p className="mt-1 text-xs text-gray-400">{log.time}</p>
           </div>
