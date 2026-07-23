@@ -1,85 +1,150 @@
-import { useMemo, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
+import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import Card from "./Card";
 import EmptyState from "./EmptyState";
-import LoadingSpinner from "./LoadingSpinner";
 import TablePagination from "./TablePagination";
-import Card from "./Card";
+import TableSkeleton from "./TableSkeleton";
 
-const DataTable = ({ columns, data, renderActions, loading = false }) => {
-  const [search, setSearch] = useState("");
+const DataTable = ({
+  columns = [],
+  data = [],
+  loading = false,
 
+  renderActions,
+
+  rowsPerPage = 10,
+
+  emptyState,
+
+  selectable = false,
+  selectedRows = [],
+  onRowSelect,
+
+  onRowClick,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const rowsPerPage = 10;
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
-  const filteredData = useMemo(() => {
-    return data.filter((row) =>
-      Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [data, search]);
+  const totalPages = Math.ceil(data.length / rowsPerPage);
 
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage,
-  );
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return data.slice(start, start + rowsPerPage);
+  }, [currentPage, data, rowsPerPage]);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <Card>
+        <TableSkeleton
+          rows={rowsPerPage}
+          columns={
+            columns.length + (renderActions ? 1 : 0) + (selectable ? 1 : 0)
+          }
+        />
+      </Card>
+    );
   }
 
   return (
     <Card>
-      <div className="overflow-x-auto">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="mb-4 w-72 rounded-lg border px-4 py-2"
-        />
-
-        <table className="min-w-full">
-          <thead className="border-b bg-gray-50">
+      <div className="max-h-162.5 overflow-auto rounded-xl">
+        <table className="min-w-full border-collapse">
+          <thead className="sticky top-0 z-20 border-b bg-white">
             <tr>
+              {selectable && (
+                <th className="w-12 px-4 py-4 text-center">
+                  <input type="checkbox" />
+                </th>
+              )}
+
               {columns.map((column) => (
+                // <th
+                //   key={column.key}
+                //   className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+                // >
+                //   <div className="flex items-center gap-2">
+                //     {column.label}
+
+                //     {column.sortable && (
+                //       <div className="flex flex-col leading-none text-gray-400">
+                //         <FiChevronUp size={10} />
+                //         <FiChevronDown size={10} className="-mt-1" />
+                //       </div>
+                //     )}
+                //   </div>
+                // </th>
                 <th
                   key={column.key}
-                  className="px-4 py-3 text-left text-sm font-semibold text-gray-600"
+                  className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
                 >
                   {column.label}
                 </th>
               ))}
 
               {renderActions && (
-                <th className="px-4 py-3 text-center">Actions</th>
+                <th className="w-20 px-4 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Actions
+                </th>
               )}
             </tr>
           </thead>
 
           <tbody>
-            {filteredData.length === 0 ? (
+            {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + (renderActions ? 1 : 0)}>
-                  <EmptyState />
+                <td
+                  colSpan={
+                    columns.length +
+                    (renderActions ? 1 : 0) +
+                    (selectable ? 1 : 0)
+                  }
+                >
+                  {emptyState ?? <EmptyState />}
                 </td>
               </tr>
             ) : (
-              paginatedData.map((row, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
+              paginatedData.map((row) => (
+                <tr
+                  key={row.id}
+                  onClick={() => onRowClick?.(row)}
+                  className={`
+                    border-b
+                    transition-all
+                    duration-200
+                    hover:bg-blue-50
+                    ${onRowClick ? "cursor-pointer" : ""}
+                  `}
+                >
+                  {selectable && (
+                    <td
+                      className="px-4 py-4 text-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(row.id)}
+                        onChange={() => onRowSelect?.(row.id)}
+                      />
+                    </td>
+                  )}
+
                   {columns.map((column) => (
-                    <td key={column.key} className="px-4 py-3">
+                    <td
+                      key={column.key}
+                      className="whitespace-nowrap px-4 py-4"
+                    >
                       {column.render ? column.render(row) : row[column.key]}
                     </td>
                   ))}
 
                   {renderActions && (
-                    <td className="px-4 py-3 text-center">
+                    <td
+                      className="px-4 py-4 text-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       {renderActions(row)}
                     </td>
                   )}
