@@ -9,7 +9,7 @@ import {
 
 export const statsCards = [
     {
-        title: "Total Servers",
+        title: "Total Devices",
         value: 28,
         subtitle: "+2 added this week",
         icon: FiServer,
@@ -17,7 +17,7 @@ export const statsCards = [
         iconColor: "text-blue-600",
     },
     {
-        title: "Online Servers",
+        title: "Online Devices",
         value: 25,
         subtitle: "89% healthy",
         icon: FiCheckCircle,
@@ -25,7 +25,7 @@ export const statsCards = [
         iconColor: "text-green-600",
     },
     {
-        title: "Offline Servers",
+        title: "Offline Devices",
         value: 3,
         subtitle: "Needs attention",
         icon: FiXCircle,
@@ -123,7 +123,7 @@ export const recentLogs = [
     },
 ];
 
-export const serverStatus = [
+export const deviceStatus = [
     {
         id: 1,
         hostname: "Ubuntu-01",
