@@ -1,94 +1,75 @@
 import { useMemo, useState } from "react";
 
-import { FiEdit, FiEye, FiTrash } from "react-icons/fi";
-
 import DashboardLayout from "../../../components/layout/DashboardLayout";
-import DataTable from "../../../components/common/DataTable";
-import StatusBadge from "../../../components/common/StatusBadge";
-import EmptyState from "../../../components/common/EmptyState";
 import PageHeader from "../../../components/common/PageHeader";
+import ConfirmModal from "../../../components/common/ConfirmModal";
 
 import DeviceToolbar from "../components/DeviceToolbar";
-import DeviceAvatar from "../components/DeviceAvatar";
-import DeviceTypeBadge from "../components/DeviceTypeBadge";
-import DeviceLastSeenBadge from "../components/DeviceLastSeenBadge";
-
+import DeviceTable from "../components/DeviceTable";
 import AddDeviceModal from "../modals/AddDeviceModal";
 
-import { devices } from "../data/devicesData";
+import useDevices from "../hooks/useDevices";
+
+import { showSuccess, showError } from "../../../utils/toast";
 
 const Device = () => {
   const [search, setSearch] = useState("");
 
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const [deleteDevice, setDeleteDevice] = useState(null);
+
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const [monitoringFilter, setMonitoringFilter] = useState("all");
+
+  const { devices, loading, addDevice, removeDevice } = useDevices();
+
   const filteredDevices = useMemo(() => {
-    return devices.filter((device) =>
-      Object.values(device)
+    return devices.filter((device) => {
+      const matchesSearch = Object.values(device)
         .join(" ")
         .toLowerCase()
-        .includes(search.toLowerCase()),
-    );
-  }, [search]);
+        .includes(search.toLowerCase());
 
-  const handleAddDevice = (device) => {
-    console.log(device);
+      const matchesStatus =
+        statusFilter === "all" || device.status.toLowerCase() === statusFilter;
 
-    // Later
-    // POST /devices
+      const matchesMonitoring =
+        monitoringFilter === "all" ||
+        (monitoringFilter === "enabled"
+          ? device.monitoring_enabled
+          : !device.monitoring_enabled);
+
+      return matchesSearch && matchesStatus && matchesMonitoring;
+    });
+  }, [devices, search, statusFilter, monitoringFilter]);
+
+  const handleAddDevice = async (device) => {
+    try {
+      await addDevice(device);
+
+      showSuccess("Device added successfully.");
+
+      setShowAddModal(false);
+    } catch (error) {
+      showError(error.message);
+    }
   };
 
-  const columns = [
-    {
-      key: "name",
-      label: "Device",
-      sortable: true,
-      render: (row) => (
-        <DeviceAvatar
-          name={row.name}
-          hostname={row.hostname}
-          deviceType={row.device_type}
-        />
-      ),
-    },
+  const handleDeleteDevice = async () => {
+    if (!deleteDevice) return;
 
-    {
-      key: "ip_address",
-      label: "IP Address",
-      sortable: true,
-    },
+    try {
+      await removeDevice(deleteDevice.id);
 
-    {
-      key: "device_type",
-      label: "Type",
-      render: (row) => <DeviceTypeBadge type={row.device_type} />,
-    },
-
-    {
-      key: "operating_system",
-      label: "Operating System",
-    },
-
-    {
-      key: "monitoring_enabled",
-      label: "Monitoring",
-      render: (row) => (
-        <StatusBadge status={row.monitoring_enabled ? "enabled" : "disabled"} />
-      ),
-    },
-
-    {
-      key: "status",
-      label: "Status",
-      render: (row) => <StatusBadge status={row.status} />,
-    },
-
-    {
-      key: "last_seen",
-      label: "Last Seen",
-      render: (row) => <DeviceLastSeenBadge lastSeen={row.last_seen} />,
-    },
-  ];
+      showSuccess("Device deleted successfully.");
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      setDeleteDevice(null);
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -103,36 +84,45 @@ const Device = () => {
         onAddDevice={() => setShowAddModal(true)}
       />
 
-      <DataTable
-        columns={columns}
-        data={filteredDevices}
-        renderActions={(device) => (
-          <div className="flex justify-center gap-3">
-            <button className="text-blue-600 hover:text-blue-800">
-              <FiEye />
-            </button>
+      {/* Enable later */}
+      {/* <DeviceFilters
+        search={search}
+        onSearchChange={setSearch}
+        status={statusFilter}
+        onStatusChange={setStatusFilter}
+        monitoring={monitoringFilter}
+        onMonitoringChange={setMonitoringFilter}
+      /> */}
 
-            <button className="text-green-600 hover:text-green-800">
-              <FiEdit />
-            </button>
-
-            <button className="text-red-600 hover:text-red-800">
-              <FiTrash />
-            </button>
-          </div>
-        )}
-        emptyState={
-          <EmptyState
-            title="No Devices Found"
-            description="Add your first device to begin monitoring."
-          />
-        }
+      <DeviceTable
+        devices={filteredDevices}
+        loading={loading}
+        onView={(device) => {
+          console.log("View", device);
+        }}
+        onEdit={(device) => {
+          console.log("Edit", device);
+        }}
+        onDelete={(device) => {
+          setDeleteDevice(device);
+        }}
       />
 
       <AddDeviceModal
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSave={handleAddDevice}
+      />
+
+      <ConfirmModal
+        open={!!deleteDevice}
+        title="Delete Device"
+        message={`Are you sure you want to delete "${deleteDevice?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onCancel={() => setDeleteDevice(null)}
+        onConfirm={handleDeleteDevice}
       />
     </DashboardLayout>
   );
