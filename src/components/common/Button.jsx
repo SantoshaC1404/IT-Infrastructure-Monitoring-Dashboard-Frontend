@@ -36,6 +36,7 @@ const Button = ({
         font-medium
         transition
         duration-200
+        cursor-pointer
         ${variants[variant]}
         ${fullWidth ? "w-full" : ""}
         ${loading || disabled ? "cursor-not-allowed opacity-60" : ""}

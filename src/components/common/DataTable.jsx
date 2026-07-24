@@ -61,21 +61,6 @@ const DataTable = ({
               )}
 
               {columns.map((column) => (
-                // <th
-                //   key={column.key}
-                //   className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
-                // >
-                //   <div className="flex items-center gap-2">
-                //     {column.label}
-
-                //     {column.sortable && (
-                //       <div className="flex flex-col leading-none text-gray-400">
-                //         <FiChevronUp size={10} />
-                //         <FiChevronDown size={10} className="-mt-1" />
-                //       </div>
-                //     )}
-                //   </div>
-                // </th>
                 <th
                   key={column.key}
                   className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
