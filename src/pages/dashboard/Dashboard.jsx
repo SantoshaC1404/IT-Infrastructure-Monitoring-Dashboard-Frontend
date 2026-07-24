@@ -21,8 +21,16 @@ import {
   recentLogs,
   deviceStatus,
 } from "../../data/dashboardData";
+import { useEffect } from "react";
+import { healthCheck } from "../../api/testApi";
 
 const Dashboard = () => {
+  useEffect(() => {
+    healthCheck()
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <DashboardLayout>
       <DashboardHeader />
