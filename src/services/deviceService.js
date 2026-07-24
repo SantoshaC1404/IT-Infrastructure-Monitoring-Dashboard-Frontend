@@ -1,32 +1,9 @@
-import * as deviceApi from "../api/devices";
+import BaseService from "./BaseService";
+import * as deviceApi from "../api/deviceApi";
 
-class DeviceService {
-    async getAll() {
-        const response = await deviceApi.getDevices();
-
-        return response.data;
-    }
-
-    async getById(id) {
-        const response = await deviceApi.getDeviceById(id);
-
-        return response.data;
-    }
-
-    async create(payload) {
-        const response = await deviceApi.createDevice(payload);
-
-        return response.data;
-    }
-
-    async update(id, payload) {
-        const response = await deviceApi.updateDevice(id, payload);
-
-        return response.data;
-    }
-
-    async delete(id) {
-        await deviceApi.deleteDevice(id);
+class DeviceService extends BaseService {
+    constructor() {
+        super(deviceApi);
     }
 }
 
