@@ -9,6 +9,8 @@ import {
   FiShield,
   FiUsers,
   FiSliders,
+  FiChevronsLeft,
+  FiChevronsRight,
 } from "react-icons/fi";
 
 import SidebarItem from "./SidebarItem";
@@ -26,7 +28,7 @@ const menuItems = [
   { title: "Settings", path: "/settings", icon: FiSliders },
 ];
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
   return (
     <>
       {/* Mobile Overlay */}
@@ -38,7 +40,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         />
       )}
 
-      <aside
+      {/* <aside
         className={`
           fixed
           top-0
@@ -58,28 +60,123 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           lg:translate-x-0
         `}
+      > */}
+
+      <aside
+        className={`
+          fixed
+          top-0
+          left-0
+          z-40
+          h-screen
+          bg-slate-900
+          text-white
+          flex
+          flex-col
+          overflow-hidden
+          transition-all
+          duration-300
+
+          ${collapsed ? "w-20" : "w-72"}
+
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
+          lg:translate-x-0
+        `}
       >
         {/* Existing Sidebar Content */}
+
         {/* Logo */}
-        <div className="border-b border-slate-700 p-6">
+        {/* <div className="border-b border-slate-700 p-6">
           <h1 className="text-xl font-bold">🛡 IT Monitor</h1>
 
           <p className="mt-1 text-sm text-slate-400">
             Infrastructure Dashboard
           </p>
+        </div> */}
+        <div className="border-b border-slate-700">
+          <div
+            className={`
+      flex
+      items-center
+      justify-between
+      p-5
+      transition-all
+      duration-300
+    `}
+          >
+            <div
+              className={`
+        flex
+        items-center
+        gap-3
+        overflow-hidden
+      `}
+            >
+              <span className="text-3xl">🛡</span>
+
+              {!collapsed && (
+                <div>
+                  <h1 className="text-lg font-bold">IT Monitor</h1>
+
+                  <p className="text-xs text-slate-400">
+                    Infrastructure Dashboard
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={onToggleCollapse}
+              className="hidden rounded-lg p-2 transition hover:bg-slate-800 lg:block"
+            >
+              {collapsed ? (
+                <FiChevronsRight size={18} />
+              ) : (
+                <FiChevronsLeft size={18} />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
-        {/* <nav className="flex-1 space-y-2 p-4"> */}
-        <nav className="sidebar-scroll flex-1 overflow-y-auto space-y-2 p-4">
+        {/* <nav className="sidebar-scroll flex-1 overflow-y-auto space-y-2 p-4"> */}
+        <nav
+          className={`
+    sidebar-scroll
+    flex-1
+    overflow-y-auto
+    space-y-2
+    transition-all
+    duration-300
+
+    ${collapsed ? "px-2 py-4" : "p-4"}
+  `}
+        >
           {menuItems.map((item) => (
-            <SidebarItem key={item.path} item={item} />
+            <SidebarItem key={item.path} item={item} collapsed={collapsed} />
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-slate-700 p-5">
+        {/* <div className="border-t border-slate-700 p-5">
           <p className="text-xs text-slate-400">Version 1.0.0</p>
+        </div> */}
+        <div
+          className={`
+    border-t
+    border-slate-700
+    transition-all
+    duration-300
+
+    ${collapsed ? "p-3 text-center" : "p-5"}
+  `}
+        >
+          {collapsed ? (
+            <p className="text-xs text-slate-400">v1.0</p>
+          ) : (
+            <p className="text-xs text-slate-400">Version 1.0.0</p>
+          )}
         </div>
       </aside>
     </>
