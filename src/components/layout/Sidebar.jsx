@@ -146,11 +146,11 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
     sidebar-scroll
     flex-1
     overflow-y-auto
-    space-y-2
+
     transition-all
     duration-300
 
-    ${collapsed ? "px-2 py-4" : "p-4"}
+    ${collapsed ? "space-y-3 px-2 py-4" : "space-y-2 p-4"}
   `}
         >
           {menuItems.map((item) => (
