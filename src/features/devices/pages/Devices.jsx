@@ -11,6 +11,7 @@ import AddDeviceModal from "../modals/AddDeviceModal";
 import useDevices from "../hooks/useDevices";
 
 import { showSuccess, showError } from "../../../utils/toast";
+import DeviceDetailsModal from "../modals/DeviceDetailsModal";
 
 const Device = () => {
   const [search, setSearch] = useState("");
@@ -24,6 +25,8 @@ const Device = () => {
   const [monitoringFilter, setMonitoringFilter] = useState("all");
 
   const { devices, loading, addDevice, removeDevice } = useDevices();
+
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   const filteredDevices = useMemo(() => {
     return devices.filter((device) => {
@@ -106,6 +109,12 @@ const Device = () => {
         onDelete={(device) => {
           setDeleteDevice(device);
         }}
+      />
+
+      <DeviceDetailsModal
+        open={!!selectedDevice}
+        device={selectedDevice}
+        onClose={() => setSelectedDevice(null)}
       />
 
       <AddDeviceModal

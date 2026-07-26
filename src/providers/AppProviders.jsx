@@ -4,8 +4,7 @@ import { Toaster } from "react-hot-toast";
 const AppProviders = ({ children }) => {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" reverseOrder={false} />
-
+      <Toaster position="top-right" />
       {children}
     </BrowserRouter>
   );
