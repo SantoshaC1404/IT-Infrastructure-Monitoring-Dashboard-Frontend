@@ -64,15 +64,9 @@ const DeviceTable = ({ devices, loading, onView, onEdit, onDelete }) => {
       }
       renderActions={(device) => (
         <div className="flex justify-center gap-3">
-          {/* <button
-            onClick={() => onView(device)}
-            className="text-blue-600 hover:text-blue-800 cursor-pointer"
-          >
-            <FiEye size={18} />
-          </button> */}
           <button
-            onClick={() => onView(row)}
-            className="text-blue-600 transition hover:text-blue-800"
+            onClick={() => onView(device)}
+            className="cursor-pointer text-blue-600 transition hover:text-blue-800"
           >
             <FiEye size={18} />
           </button>

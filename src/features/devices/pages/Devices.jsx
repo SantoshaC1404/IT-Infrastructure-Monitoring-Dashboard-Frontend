@@ -87,21 +87,11 @@ const Device = () => {
         onAddDevice={() => setShowAddModal(true)}
       />
 
-      {/* Enable later */}
-      {/* <DeviceFilters
-        search={search}
-        onSearchChange={setSearch}
-        status={statusFilter}
-        onStatusChange={setStatusFilter}
-        monitoring={monitoringFilter}
-        onMonitoringChange={setMonitoringFilter}
-      /> */}
-
       <DeviceTable
         devices={filteredDevices}
         loading={loading}
         onView={(device) => {
-          console.log("View", device);
+          setSelectedDevice(device);
         }}
         onEdit={(device) => {
           console.log("Edit", device);
