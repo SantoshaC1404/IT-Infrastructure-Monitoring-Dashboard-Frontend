@@ -40,28 +40,6 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
         />
       )}
 
-      {/* <aside
-        className={`
-          fixed
-          top-0
-          left-0
-          z-40
-          h-screen
-          w-72
-          bg-slate-900
-          text-white
-          flex
-          flex-col
-          overflow-y-auto
-          transition-transform
-          duration-300
-
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-
-          lg:translate-x-0
-        `}
-      > */}
-
       <aside
         className={`
           fixed
@@ -84,34 +62,28 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
           lg:translate-x-0
         `}
       >
-        {/* Existing Sidebar Content */}
+        {/* Sidebar Content */}
 
         {/* Logo */}
-        {/* <div className="border-b border-slate-700 p-6">
-          <h1 className="text-xl font-bold">🛡 IT Monitor</h1>
 
-          <p className="mt-1 text-sm text-slate-400">
-            Infrastructure Dashboard
-          </p>
-        </div> */}
         <div className="border-b border-slate-700">
           <div
             className={`
-      flex
-      items-center
-      justify-between
-      p-5
-      transition-all
-      duration-300
-    `}
+              flex
+              items-center
+              justify-between
+              p-5
+              transition-all
+              duration-300
+            `}
           >
             <div
               className={`
-        flex
-        items-center
-        gap-3
-        overflow-hidden
-      `}
+                flex
+                items-center
+                gap-3
+                overflow-hidden
+              `}
             >
               <span className="text-3xl">🛡</span>
 
@@ -140,18 +112,17 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
         </div>
 
         {/* Navigation */}
-        {/* <nav className="sidebar-scroll flex-1 overflow-y-auto space-y-2 p-4"> */}
         <nav
           className={`
-    sidebar-scroll
-    flex-1
-    overflow-y-auto
+            sidebar-scroll
+            flex-1
+            overflow-y-auto
 
-    transition-all
-    duration-300
+            transition-all
+            duration-300
 
-    ${collapsed ? "space-y-3 px-2 py-4" : "space-y-2 p-4"}
-  `}
+            ${collapsed ? "space-y-3 px-2 py-4" : "space-y-2 p-4"}
+          `}
         >
           {menuItems.map((item) => (
             <SidebarItem key={item.path} item={item} collapsed={collapsed} />
@@ -159,18 +130,16 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
         </nav>
 
         {/* Footer */}
-        {/* <div className="border-t border-slate-700 p-5">
-          <p className="text-xs text-slate-400">Version 1.0.0</p>
-        </div> */}
+
         <div
           className={`
-    border-t
-    border-slate-700
-    transition-all
-    duration-300
+            border-t
+            border-slate-700
+            transition-all
+            duration-300
 
-    ${collapsed ? "p-3 text-center" : "p-5"}
-  `}
+            ${collapsed ? "p-3 text-center" : "p-5"}
+          `}
         >
           {collapsed ? (
             <p className="text-xs text-slate-400">v1.0</p>

@@ -20,20 +20,19 @@ const SidebarItem = ({ item, collapsed }) => {
 
         ${
           isActive
-            ? // ? "bg-blue-600 text-white shadow-lg"
-              `
-    bg-blue-600
-    text-white
-    shadow-lg
+            ? `
+              bg-blue-600
+              text-white
+              shadow-lg
 
-    before:absolute
-    before:left-0
-    before:top-2
-    before:h-8
-    before:w-1
-    before:rounded-r-full
-    before:bg-white
-  `
+              before:absolute
+              before:left-0
+              before:top-2
+              before:h-8
+              before:w-1
+              before:rounded-r-full
+              before:bg-white
+            `
             : "text-slate-300 hover:bg-slate-800 hover:text-white"
         }
       `
