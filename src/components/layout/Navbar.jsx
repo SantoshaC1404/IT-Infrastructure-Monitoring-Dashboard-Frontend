@@ -1,6 +1,6 @@
-import { FiMenu } from "react-icons/fi";
+import { FiMenu, FiSidebar } from "react-icons/fi";
+import { RiExpandHorizontalSFill } from "react-icons/ri";
 
-// import NotificationBell from "./NotificationBell";
 import ProfileMenu from "./ProfileMenu";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
@@ -8,21 +8,66 @@ import NotificationBell from "../../features/notifications/components/Notificati
 
 const Navbar = ({ onMenuClick }) => {
   return (
-    <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6 shadow-sm">
-      {/* Left Section */}
-      <div className="flex items-center gap-4">
+    <header
+      className="
+        sticky
+        top-0
+        z-30
+        flex
+        h-16
+        items-center
+        justify-between
+        border-b
+        border-gray-200
+        bg-white
+        px-6
+        shadow-sm
+      "
+    >
+      {/* Left */}
+
+      <div className="flex items-center gap-3">
+        {/* Mobile */}
+
         <button
           onClick={onMenuClick}
-          className="rounded-lg p-2 hover:bg-gray-100 lg:hidden"
+          className="
+            rounded-lg
+            p-2
+            transition
+            hover:bg-gray-100
+            lg:hidden
+          "
         >
           <FiMenu size={22} />
         </button>
 
+        {/* Desktop Collapse */}
+
+        {/* <button
+          onClick={onToggleCollapse}
+          className="
+            hidden
+            rounded-lg
+            p-2
+            transition
+            hover:bg-gray-100
+            lg:flex
+          "
+        >
+          {collapsed ? (
+            <FiSidebar size={20} />
+          ) : (
+            <RiExpandHorizontalSFill size={20} />
+          )}
+        </button> */}
+
         <SearchBar />
       </div>
 
-      {/* Right Section */}
-      <div className="flex items-center gap-4">
+      {/* Right */}
+
+      <div className="flex items-center gap-3">
         <ThemeToggle />
 
         <NotificationBell />
