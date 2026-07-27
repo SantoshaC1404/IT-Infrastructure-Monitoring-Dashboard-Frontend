@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 
 const Input = forwardRef(
   (
@@ -7,9 +7,13 @@ const Input = forwardRef(
       type = "text",
       error,
       required = false,
+      disabled = false,
+
       leftIcon,
       rightIcon,
+
       className = "",
+
       ...props
     },
     ref,
@@ -19,13 +23,14 @@ const Input = forwardRef(
         {label && (
           <label className="mb-2 block text-sm font-medium text-gray-700">
             {label}
+
             {required && <span className="ml-1 text-red-500">*</span>}
           </label>
         )}
 
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
               {leftIcon}
             </div>
           )}
@@ -33,10 +38,32 @@ const Input = forwardRef(
           <input
             ref={ref}
             type={type}
+            disabled={disabled}
             {...props}
-            className={`w-full rounded-lg border border-gray-300 bg-white py-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ${
-              leftIcon ? "pl-10" : "pl-4"
-            } ${rightIcon ? "pr-10" : "pr-4"} ${className}`}
+            className={`
+              w-full
+              rounded-xl
+              border
+              bg-white
+              py-2.5
+              outline-none
+              transition-all
+              duration-200
+
+              ${
+                error
+                  ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-200"
+                  : "border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              }
+
+              ${disabled ? "cursor-not-allowed bg-gray-100 text-gray-500" : ""}
+
+              ${leftIcon ? "pl-10" : "pl-4"}
+
+              ${rightIcon ? "pr-10" : "pr-4"}
+
+              ${className}
+            `}
           />
 
           {rightIcon && (
