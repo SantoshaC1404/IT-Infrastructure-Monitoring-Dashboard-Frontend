@@ -1,62 +1,136 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import Button from "../../../components/common/Button";
 import Modal from "../../../components/common/Modal";
 
 import DeviceForm from "../components/DeviceForm";
-import { defaultDevice } from "../data/defaultDevice";
 
-const AddDeviceModal = ({ open, onClose, onSave }) => {
-  const [formData, setFormData] = useState(defaultDevice);
+const AddDeviceModal = ({ open, onClose, onSave, onTestConnection }) => {
+  const formRef = useRef(null);
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const [testing, setTesting] = useState(false);
+
+  const [saving, setSaving] = useState(false);
+
+  const [connectionVerified, setConnectionVerified] = useState(false);
+
+  const [connectionResult, setConnectionResult] = useState(null);
+
+  /**
+   * Reset modal state
+   */
+  const resetState = () => {
+    formRef.current?.reset();
+
+    setConnectionVerified(false);
+
+    setConnectionResult(null);
   };
 
-  const handleCancel = () => {
-    setFormData(defaultDevice);
+  /**
+   * Close modal
+   */
+  const handleClose = () => {
+    resetState();
+
     onClose();
   };
 
-  const handleSave = () => {
-    onSave(formData);
+  /**
+   * Test Connection
+   */
+  const handleTestConnection = async () => {
+    try {
+      setTesting(true);
 
-    setFormData(defaultDevice);
+      const values = formRef.current.getValues();
 
-    onClose();
+      const result = await onTestConnection(values);
+
+      setConnectionVerified(result.success);
+
+      setConnectionResult(result);
+    } finally {
+      setTesting(false);
+    }
   };
 
-  const handleTestConnection = () => {
-    console.log("Testing connection...", formData);
+  /**
+   * Save Device
+   */
+  const handleSave = async (values) => {
+    if (!connectionVerified) {
+      return;
+    }
 
-    // Later:
-    // POST /devices/test-connection
+    try {
+      setSaving(true);
+
+      await onSave(values);
+
+      handleClose();
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <Modal
       open={open}
-      onClose={handleCancel}
+      onClose={handleClose}
       title="Add Device"
-      size="lg"
+      size="xl"
       footer={
         <>
-          <Button variant="secondary" onClick={handleCancel}>
+          <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
 
-          <Button variant="secondary" onClick={handleTestConnection}>
+          <Button
+            variant="secondary"
+            loading={testing}
+            onClick={handleTestConnection}
+          >
             Test Connection
           </Button>
 
-          <Button onClick={handleSave}>Save Device</Button>
+          <Button
+            loading={saving}
+            disabled={!connectionVerified}
+            onClick={() => formRef.current.submit()}
+          >
+            Save Device
+          </Button>
         </>
       }
     >
-      <DeviceForm formData={formData} onChange={handleChange} />
+      <DeviceForm
+        ref={formRef}
+        onSubmit={handleSave}
+        onConnectionChange={() => {
+          setConnectionVerified(false);
+
+          setConnectionResult(null);
+        }}
+      />
+
+      {connectionResult && (
+        <div
+          className={`mt-6 rounded-xl border p-4 ${
+            connectionResult.success
+              ? "border-green-300 bg-green-50"
+              : "border-red-300 bg-red-50"
+          }`}
+        >
+          <p
+            className={`font-medium ${
+              connectionResult.success ? "text-green-700" : "text-red-700"
+            }`}
+          >
+            {connectionResult.message}
+          </p>
+        </div>
+      )}
     </Modal>
   );
 };

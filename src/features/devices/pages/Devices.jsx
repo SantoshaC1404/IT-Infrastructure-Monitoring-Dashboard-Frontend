@@ -6,28 +6,30 @@ import ConfirmModal from "../../../components/common/ConfirmModal";
 
 import DeviceToolbar from "../components/DeviceToolbar";
 import DeviceTable from "../components/DeviceTable";
+
 import AddDeviceModal from "../modals/AddDeviceModal";
+import DeviceDetailsModal from "../modals/DeviceDetailsModal";
 
 import useDevices from "../hooks/useDevices";
 
-import { showSuccess, showError } from "../../../utils/toast";
-import DeviceDetailsModal from "../modals/DeviceDetailsModal";
-
 const Device = () => {
+  // Search & Filters
   const [search, setSearch] = useState("");
-
-  const [showAddModal, setShowAddModal] = useState(false);
-
-  const [deleteDevice, setDeleteDevice] = useState(null);
-
   const [statusFilter, setStatusFilter] = useState("all");
-
   const [monitoringFilter, setMonitoringFilter] = useState("all");
 
-  const { devices, loading, addDevice, removeDevice } = useDevices();
-
+  // Modals
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
+  const [deviceToDelete, setDeviceToDelete] = useState(null);
 
+  // Business Logic
+  const { devices, loading, addDevice, removeDevice, testConnection } =
+    useDevices();
+
+  /**
+   * Filter Devices
+   */
   const filteredDevices = useMemo(() => {
     return devices.filter((device) => {
       const matchesSearch = Object.values(device)
@@ -36,7 +38,7 @@ const Device = () => {
         .includes(search.toLowerCase());
 
       const matchesStatus =
-        statusFilter === "all" || device.status.toLowerCase() === statusFilter;
+        statusFilter === "all" || device.status?.toLowerCase() === statusFilter;
 
       const matchesMonitoring =
         monitoringFilter === "all" ||
@@ -48,30 +50,24 @@ const Device = () => {
     });
   }, [devices, search, statusFilter, monitoringFilter]);
 
+  /**
+   * Add Device
+   */
   const handleAddDevice = async (device) => {
-    try {
-      await addDevice(device);
+    await addDevice(device);
 
-      showSuccess("Device added successfully.");
-
-      setShowAddModal(false);
-    } catch (error) {
-      showError(error.message);
-    }
+    setShowAddModal(false);
   };
 
+  /**
+   * Delete Device
+   */
   const handleDeleteDevice = async () => {
-    if (!deleteDevice) return;
+    if (!deviceToDelete) return;
 
-    try {
-      await removeDevice(deleteDevice.id);
+    await removeDevice(deviceToDelete.id);
 
-      showSuccess("Device deleted successfully.");
-    } catch (error) {
-      showError(error.message);
-    } finally {
-      setDeleteDevice(null);
-    }
+    setDeviceToDelete(null);
   };
 
   return (
@@ -84,21 +80,21 @@ const Device = () => {
       <DeviceToolbar
         search={search}
         onSearchChange={setSearch}
+        statusFilter={statusFilter}
+        monitoringFilter={monitoringFilter}
+        onStatusFilterChange={setStatusFilter}
+        onMonitoringFilterChange={setMonitoringFilter}
         onAddDevice={() => setShowAddModal(true)}
       />
 
       <DeviceTable
         devices={filteredDevices}
         loading={loading}
-        onView={(device) => {
-          setSelectedDevice(device);
-        }}
+        onView={setSelectedDevice}
         onEdit={(device) => {
-          console.log("Edit", device);
+          console.log("Edit Device", device);
         }}
-        onDelete={(device) => {
-          setDeleteDevice(device);
-        }}
+        onDelete={setDeviceToDelete}
       />
 
       <DeviceDetailsModal
@@ -111,16 +107,17 @@ const Device = () => {
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSave={handleAddDevice}
+        onTestConnection={testConnection}
       />
 
       <ConfirmModal
-        open={!!deleteDevice}
+        open={!!deviceToDelete}
         title="Delete Device"
-        message={`Are you sure you want to delete "${deleteDevice?.name}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete "${deviceToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
-        onCancel={() => setDeleteDevice(null)}
+        onCancel={() => setDeviceToDelete(null)}
         onConfirm={handleDeleteDevice}
       />
     </DashboardLayout>

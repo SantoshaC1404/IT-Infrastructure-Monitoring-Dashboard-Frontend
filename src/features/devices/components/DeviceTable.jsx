@@ -11,7 +11,7 @@ const DeviceTable = ({ devices, loading, onView, onEdit, onDelete }) => {
   const columns = [
     {
       key: "name",
-      label: "Device",
+      label: "Device name",
       render: (row) => <DeviceAvatar name={row.name} />,
     },
 

@@ -1,145 +1,196 @@
+import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { FiLock, FiMonitor, FiServer, FiUser } from "react-icons/fi";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import Input from "../../../components/common/Input";
-import Select from "../../../components/common/Select";
-import Switch from "../../../components/common/Switch";
+import { deviceSchema } from "../validation/deviceSchema";
 
-const deviceTypes = [
-  { label: "Linux Server", value: "Linux Server" },
-  { label: "Windows Server", value: "Windows Server" },
-  { label: "Router", value: "Router" },
-  { label: "Firewall", value: "Firewall" },
-];
+const DeviceForm = forwardRef(
+  ({ defaultValues, onSubmit, onConnectionChange }, ref) => {
+    const {
+      register,
+      handleSubmit,
+      watch,
+      reset,
+      getValues,
+      setError,
+      clearErrors,
+      formState: { errors },
+    } = useForm({
+      resolver: zodResolver(deviceSchema),
+      defaultValues: defaultValues ?? {
+        name: "",
+        device_type: "LINUX",
+        ip_address: "",
+        ssh_port: 22,
+        username: "",
+        password: "",
+      },
+    });
 
-const operatingSystems = [
-  { label: "Ubuntu 24.04", value: "Ubuntu 24.04" },
-  { label: "Ubuntu 22.04", value: "Ubuntu 22.04" },
-  { label: "Debian 12", value: "Debian 12" },
-  { label: "RHEL 9", value: "RHEL 9" },
-  { label: "Windows Server 2022", value: "Windows Server 2022" },
-];
+    /**
+     * Reset form when default values change.
+     * (Useful for Edit Device)
+     */
+    useEffect(() => {
+      if (defaultValues) {
+        reset(defaultValues);
+      }
+    }, [defaultValues, reset]);
 
-const pollingIntervals = [
-  { label: "15 Seconds", value: 15 },
-  { label: "30 Seconds", value: 30 },
-  { label: "1 Minute", value: 60 },
-  { label: "5 Minutes", value: 300 },
-];
+    /**
+     * Watch only connection fields.
+     */
+    const deviceType = watch("device_type");
+    const ipAddress = watch("ip_address");
+    const port = watch("ssh_port");
+    const username = watch("username");
+    const password = watch("password");
 
-const DeviceForm = ({ formData, onChange }) => {
-  return (
-    <div className="space-y-8">
-      {/* Basic Information */}
+    /**
+     * Clear connection status whenever
+     * any connection field changes.
+     */
+    useEffect(() => {
+      onConnectionChange?.();
+    }, [deviceType, ipAddress, port, username, password, onConnectionChange]);
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Basic Information</h3>
+    /**
+     * Expose methods to parent.
+     */
+    useImperativeHandle(ref, () => ({
+      submit: () => handleSubmit(onSubmit)(),
 
-        <div className="grid grid-cols-2 gap-5">
-          <Input
-            label="Device Name"
-            required
-            value={formData.name}
-            onChange={(e) => onChange("name", e.target.value)}
-          />
+      reset: () =>
+        reset({
+          name: "",
+          device_type: "LINUX",
+          ip_address: "",
+          ssh_port: 22,
+          username: "",
+          password: "",
+        }),
 
-          <Input
-            label="Hostname"
-            required
-            value={formData.hostname}
-            onChange={(e) => onChange("hostname", e.target.value)}
-          />
-        </div>
-      </div>
+      getValues,
 
-      {/* Network */}
+      setError,
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Network</h3>
+      clearErrors,
+    }));
 
-        <div className="grid grid-cols-2 gap-5">
-          <Input
-            label="IP Address"
-            required
-            placeholder="192.168.1.101"
-            value={formData.ip_address}
-            onChange={(e) => onChange("ip_address", e.target.value)}
-          />
+    return (
+      <form className="space-y-8">
+        {/* Device Information */}
+        <section>
+          <h3 className="mb-5 flex items-center gap-2 text-lg font-semibold text-gray-800">
+            <FiServer />
+            Device Information
+          </h3>
 
-          <Input
-            label="Port"
-            value={formData.port}
-            onChange={(e) => onChange("port", e.target.value)}
-          />
-        </div>
-      </div>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <Input
+              label="Device Name"
+              required
+              placeholder="Ubuntu Server"
+              {...register("name")}
+              error={errors.name?.message}
+            />
 
-      {/* System */}
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Device Type
+              </label>
 
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">System</h3>
+              <select
+                {...register("device_type")}
+                className="
+                  w-full
+                  rounded-lg
+                  border
+                  border-gray-300
+                  bg-white
+                  px-4
+                  py-2.5
+                  outline-none
+                  transition
+                  focus:border-blue-500
+                  focus:ring-2
+                  focus:ring-blue-200
+                "
+              >
+                <option value="LINUX">Linux</option>
+                <option value="WINDOWS">Windows</option>
+              </select>
+            </div>
 
-        <div className="grid grid-cols-2 gap-5">
-          <Select
-            label="Device Type"
-            value={formData.device_type}
-            onChange={(e) => onChange("device_type", e.target.value)}
-            options={deviceTypes}
-          />
+            <Input
+              label="IP Address"
+              required
+              placeholder="192.168.1.100"
+              {...register("ip_address")}
+              error={errors.ip_address?.message}
+            />
 
-          <Select
-            label="Operating System"
-            value={formData.operating_system}
-            onChange={(e) => onChange("operating_system", e.target.value)}
-            options={operatingSystems}
-          />
-        </div>
-      </div>
-
-      {/* Authentication */}
-
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Authentication</h3>
-
-        <div className="grid grid-cols-2 gap-5">
-          <Input
-            label="Username"
-            value={formData.username}
-            onChange={(e) => onChange("username", e.target.value)}
-          />
-
-          <Input
-            type="password"
-            label="Password"
-            value={formData.password}
-            onChange={(e) => onChange("password", e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* Monitoring */}
-
-      <div>
-        <h3 className="mb-4 text-lg font-semibold">Monitoring</h3>
-
-        <div className="space-y-5">
-          <Switch
-            label="Enable Monitoring"
-            checked={formData.monitoring_enabled}
-            onChange={(e) => onChange("monitoring_enabled", e.target.checked)}
-          />
-
-          <div className="max-w-xs">
-            <Select
-              label="Polling Interval"
-              value={formData.polling_interval}
-              onChange={(e) =>
-                onChange("polling_interval", Number(e.target.value))
-              }
-              options={pollingIntervals}
+            <Input
+              label="SSH Port"
+              required
+              type="number"
+              {...register("ssh_port")}
+              error={errors.ssh_port?.message}
             />
           </div>
+        </section>
+
+        {/* Credentials */}
+        <section>
+          <h3 className="mb-5 flex items-center gap-2 text-lg font-semibold text-gray-800">
+            <FiUser />
+            Credentials
+          </h3>
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <Input
+              label="Username"
+              required
+              leftIcon={<FiUser />}
+              {...register("username")}
+              error={errors.username?.message}
+            />
+
+            <Input
+              label="Password"
+              required
+              type="password"
+              leftIcon={<FiLock />}
+              {...register("password")}
+              error={errors.password?.message}
+            />
+          </div>
+        </section>
+
+        {/* Connection Notice */}
+        <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+          <div className="flex items-start gap-3">
+            <FiMonitor size={18} className="mt-1 text-blue-600" />
+
+            <div>
+              <h4 className="font-medium text-blue-700">
+                Connection Verification
+              </h4>
+
+              <p className="mt-1 text-sm text-blue-600">
+                Verify the SSH connection before saving the device. Any changes
+                to the connection settings will require a new verification.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  );
-};
+      </form>
+    );
+  },
+);
+
+DeviceForm.displayName = "DeviceForm";
 
 export default DeviceForm;
