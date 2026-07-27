@@ -11,7 +11,7 @@ import {
     FiSliders,
 } from "react-icons/fi";
 
-const menuSections = [
+export const menuSections = [
     {
         title: "Overview",
         items: [
@@ -61,7 +61,6 @@ const menuSections = [
                 title: "Alerts",
                 path: "/alerts",
                 icon: FiAlertTriangle,
-                badge: 5,
             },
             {
                 title: "SSL",
@@ -87,5 +86,3 @@ const menuSections = [
         ],
     },
 ];
-
-export default menuSections;

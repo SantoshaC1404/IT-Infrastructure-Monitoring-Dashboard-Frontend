@@ -18,18 +18,22 @@ const SidebarItem = ({ item, collapsed }) => {
             flex
             items-center
 
-            ${collapsed ? "justify-center" : "justify-between"}
+            // ${collapsed ? "justify-center" : "justify-between"}
+            ${
+              collapsed
+                ? "justify-center w-12 h-12 mx-auto"
+                : "justify-between h-12"
+            }
 
             rounded-xl
             px-3
-            py-3
 
             transition-all
             duration-200
 
             ${
               isActive
-                ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30"
+                ? "from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-900/30"
                 : "text-slate-300 hover:bg-slate-800 hover:text-white"
             }
           `

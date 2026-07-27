@@ -1,16 +1,13 @@
-import { Monitor, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-
-// import { PanelLeftOpen, PanelLeftClose, Monitor } from "lucide-react";
-
-import SidebarItem from "./SidebarItem";
-import menuSections from "./menuConfig";
 import SidebarHeader from "./SidebarHeader";
 import SidebarFooter from "./SidebarFooter";
 import SidebarSection from "./SidebarSection";
 
+import { menuSections } from "./menuConfig";
+
 const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
   return (
     <>
+      {/* Mobile Overlay */}
       {isOpen && (
         <div
           onClick={onClose}
@@ -27,40 +24,42 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
           flex
           h-screen
           flex-col
-          overflow-hidden
           bg-slate-900
           text-white
+
+          overflow-hidden
+
           transition-all
           duration-300
-        ease-in-out
+          ease-in-out
 
-          ${collapsed ? "w-20" : "w-72"}
+          ${collapsed ? "w-[72px]" : "w-72"}
 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
 
           lg:translate-x-0
         `}
       >
-        {/* HEADER */}
+        {/* Header */}
+
         <SidebarHeader
           collapsed={collapsed}
           onToggleCollapse={onToggleCollapse}
         />
 
-        {/* NAVIGATION */}
+        {/* Navigation */}
 
         <nav
-          className="
-        sidebar-scroll
+          className={`
+            sidebar-scroll
 
-        flex-1
+            flex-1
 
-        overflow-y-auto
-        overflow-x-hidden
+            overflow-y-auto
+            overflow-x-hidden
 
-        px-3
-        py-4
-    "
+            ${collapsed ? "px-2 py-4" : "px-3 py-4 pr-2"}
+          `}
         >
           {menuSections.map((section) => (
             <SidebarSection
@@ -71,7 +70,8 @@ const Sidebar = ({ isOpen, collapsed, onClose, onToggleCollapse }) => {
           ))}
         </nav>
 
-        {/* FOOTER */}
+        {/* Footer */}
+
         <SidebarFooter collapsed={collapsed} />
       </aside>
     </>
