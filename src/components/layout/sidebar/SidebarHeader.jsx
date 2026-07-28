@@ -1,4 +1,5 @@
-import { Monitor, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Monitor } from "lucide-react";
+import { FiSidebar } from "react-icons/fi";
 
 const SidebarHeader = ({ collapsed, onToggleCollapse }) => {
   return (
@@ -50,11 +51,7 @@ const SidebarHeader = ({ collapsed, onToggleCollapse }) => {
             active:scale-95
           "
         >
-          {collapsed ? (
-            <PanelLeftOpen size={20} />
-          ) : (
-            <PanelLeftClose size={20} />
-          )}
+          {collapsed ? <FiSidebar size={20} /> : <FiSidebar size={20} />}
         </button>
       </div>
     </div>
