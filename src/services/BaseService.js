@@ -3,7 +3,9 @@ export default class BaseService {
     this.api = api;
   }
 
-  // GET ALL
+  /**
+   * Get all resources.
+   */
   async getAll() {
     try {
       const response = await this.api.getAll();
@@ -13,7 +15,9 @@ export default class BaseService {
     }
   }
 
-  // GET BY ID
+  /**
+   * Get resource by id.
+   */
   async getById(id) {
     try {
       const response = await this.api.getById(id);
@@ -23,7 +27,9 @@ export default class BaseService {
     }
   }
 
-  // CREATE
+  /**
+   * Create resource.
+   */
   async create(payload) {
     try {
       const response = await this.api.create(payload);
@@ -33,7 +39,9 @@ export default class BaseService {
     }
   }
 
-  // UPDATE
+  /**
+   * Update resource.
+   */
   async update(id, payload) {
     try {
       const response = await this.api.update(id, payload);
@@ -43,16 +51,21 @@ export default class BaseService {
     }
   }
 
-  // DELETE BY ID
+  /**
+   * Delete resource.
+   */
   async delete(id) {
     try {
-      await this.api.delete(id);
+      const response = await this.api.delete(id);
+      return response?.data;
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  // ERROR HANDLING
+  /**
+   * Common error handler.
+   */
   handleError(error) {
     if (error.response) {
       throw new Error(
