@@ -1,74 +1,44 @@
-import { useMemo, useState } from "react";
-
 import DashboardLayout from "../../../components/layout/DashboardLayout";
 import PageHeader from "../../../components/common/PageHeader";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 
-import DeviceToolbar from "../components/DeviceToolbar";
-import DeviceTable from "../components/DeviceTable";
+import DeviceToolbar from "../toolbar/DeviceToolbar";
+import DeviceTable from "../table/DeviceTable";
 
-import AddDeviceModal from "../modals/AddDeviceModal";
+import DeviceModal from "../modals/DeviceModal";
 import DeviceDetailsModal from "../modals/DeviceDetailsModal";
 
-import useDevices from "../hooks/useDevices";
+import useDevicePage from "../hooks/useDevicePage";
 
 const Device = () => {
-  // Search & Filters
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [monitoringFilter, setMonitoringFilter] = useState("all");
+  const {
+    devices,
+    loading,
 
-  // Modals
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState(null);
-  const [deviceToDelete, setDeviceToDelete] = useState(null);
+    search,
+    setSearch,
 
-  // Business Logic
-  const { devices, loading, addDevice, removeDevice, testConnection } =
-    useDevices();
+    statusFilter,
+    setStatusFilter,
 
-  /**
-   * Filter Devices
-   */
-  const filteredDevices = useMemo(() => {
-    return devices.filter((device) => {
-      const matchesSearch = Object.values(device)
-        .join(" ")
-        .toLowerCase()
-        .includes(search.toLowerCase());
+    monitoringFilter,
+    setMonitoringFilter,
 
-      const matchesStatus =
-        statusFilter === "all" || device.status?.toLowerCase() === statusFilter;
+    selectedDevice,
+    handleView,
+    closeDetails,
 
-      const matchesMonitoring =
-        monitoringFilter === "all" ||
-        (monitoringFilter === "enabled"
-          ? device.monitoring_enabled
-          : !device.monitoring_enabled);
+    deviceToDelete,
+    requestDelete,
+    cancelDelete,
+    confirmDelete,
 
-      return matchesSearch && matchesStatus && matchesMonitoring;
-    });
-  }, [devices, search, statusFilter, monitoringFilter]);
+    addDevice,
+    updateDevice,
+    testConnection,
 
-  /**
-   * Add Device
-   */
-  const handleAddDevice = async (device) => {
-    await addDevice(device);
-
-    setShowAddModal(false);
-  };
-
-  /**
-   * Delete Device
-   */
-  const handleDeleteDevice = async () => {
-    if (!deviceToDelete) return;
-
-    await removeDevice(deviceToDelete.id);
-
-    setDeviceToDelete(null);
-  };
+    deviceModal,
+  } = useDevicePage();
 
   return (
     <DashboardLayout>
@@ -84,29 +54,29 @@ const Device = () => {
         monitoringFilter={monitoringFilter}
         onStatusFilterChange={setStatusFilter}
         onMonitoringFilterChange={setMonitoringFilter}
-        onAddDevice={() => setShowAddModal(true)}
+        onAddDevice={deviceModal.openCreate}
       />
 
       <DeviceTable
-        devices={filteredDevices}
+        devices={devices}
         loading={loading}
-        onView={setSelectedDevice}
-        onEdit={(device) => {
-          console.log("Edit Device", device);
-        }}
-        onDelete={setDeviceToDelete}
+        onView={handleView}
+        onEdit={deviceModal.openEdit}
+        onDelete={requestDelete}
       />
 
       <DeviceDetailsModal
         open={!!selectedDevice}
         device={selectedDevice}
-        onClose={() => setSelectedDevice(null)}
+        onClose={closeDetails}
       />
 
-      <AddDeviceModal
-        open={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSave={handleAddDevice}
+      <DeviceModal
+        open={deviceModal.isOpen}
+        device={deviceModal.selectedDevice}
+        onClose={deviceModal.close}
+        onCreate={addDevice}
+        onUpdate={updateDevice}
         onTestConnection={testConnection}
       />
 
@@ -117,8 +87,8 @@ const Device = () => {
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"
-        onCancel={() => setDeviceToDelete(null)}
-        onConfirm={handleDeleteDevice}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
       />
     </DashboardLayout>
   );

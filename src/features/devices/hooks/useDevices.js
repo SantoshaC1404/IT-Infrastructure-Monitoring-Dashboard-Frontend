@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 
-import deviceService from "../../../services/deviceService";
+import deviceService from "../services/deviceService";
 
 import { showSuccess, showError } from "../../../utils/toast";
+
+import { DEVICE_MESSAGES } from "../constants/deviceMessages";
 
 const useDevices = () => {
   const [devices, setDevices] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   /**
    * Fetch Devices
@@ -17,8 +19,7 @@ const useDevices = () => {
   const fetchDevices = useCallback(async () => {
     try {
       setLoading(true);
-
-      setError("");
+      setError(null);
 
       const data = await deviceService.getAll();
 
@@ -33,36 +34,36 @@ const useDevices = () => {
   }, []);
 
   /**
-   * Add Device
+   * Create Device
    */
-  const addDevice = async (payload) => {
+  const addDevice = useCallback(async (values) => {
     try {
-      const device = await deviceService.create(payload);
+      const createdDevice = await deviceService.create(values);
 
-      setDevices((prev) => [...prev, device]);
+      setDevices((prev) => [...prev, createdDevice]);
 
-      showSuccess("Device added successfully.");
+      showSuccess(DEVICE_MESSAGES.CREATE_SUCCESS);
 
-      return device;
+      return createdDevice;
     } catch (err) {
       showError(err.message);
 
       throw err;
     }
-  };
+  }, []);
 
   /**
    * Update Device
    */
-  const updateDevice = async (id, payload) => {
+  const updateDevice = useCallback(async (id, values) => {
     try {
-      const updatedDevice = await deviceService.update(id, payload);
+      const updatedDevice = await deviceService.update(id, values);
 
       setDevices((prev) =>
         prev.map((device) => (device.id === id ? updatedDevice : device)),
       );
 
-      showSuccess("Device updated successfully.");
+      showSuccess(DEVICE_MESSAGES.UPDATE_SUCCESS);
 
       return updatedDevice;
     } catch (err) {
@@ -70,31 +71,31 @@ const useDevices = () => {
 
       throw err;
     }
-  };
+  }, []);
 
   /**
    * Delete Device
    */
-  const removeDevice = async (id) => {
+  const removeDevice = useCallback(async (id) => {
     try {
       await deviceService.delete(id);
 
       setDevices((prev) => prev.filter((device) => device.id !== id));
 
-      showSuccess("Device deleted successfully.");
+      showSuccess(DEVICE_MESSAGES.DELETE_SUCCESS);
     } catch (err) {
       showError(err.message);
 
       throw err;
     }
-  };
+  }, []);
 
   /**
-   * Test Connection
+   * Test Device Connection
    */
-  const testConnection = async (payload) => {
+  const testConnection = useCallback(async (values) => {
     try {
-      const result = await deviceService.testConnection(payload);
+      const result = await deviceService.testConnection(values);
 
       if (result.success) {
         showSuccess(result.message);
@@ -108,7 +109,7 @@ const useDevices = () => {
 
       throw err;
     }
-  };
+  }, []);
 
   /**
    * Initial Load
