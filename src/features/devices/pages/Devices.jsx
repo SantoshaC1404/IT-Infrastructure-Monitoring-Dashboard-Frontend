@@ -9,6 +9,7 @@ import DeviceModal from "../modals/DeviceModal";
 import DeviceDetailsModal from "../modals/DeviceDetailsModal";
 
 import useDevicePage from "../hooks/useDevicePage";
+import Button from "../../../components/common/Button";
 
 const Device = () => {
   const {
@@ -73,10 +74,19 @@ const Device = () => {
 
       <DeviceModal
         open={deviceModal.isOpen}
-        device={deviceModal.selectedDevice}
         onClose={deviceModal.close}
-        onCreate={addDevice}
-        onUpdate={updateDevice}
+        // onCreate={addDevice}
+        onCreate={async (data) => {
+          console.log("Device.jsx onCreate");
+          console.log(data);
+
+          const result = await addDevice(data);
+
+          console.log("Device.jsx addDevice returned");
+          console.log(result);
+
+          return result;
+        }}
         onTestConnection={testConnection}
       />
 

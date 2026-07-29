@@ -36,11 +36,15 @@ class DeviceService extends BaseService {
    * Create device.
    */
   async create(device) {
+    console.log("DeviceService.create()");
+    console.log(device);
+
     const payload = toCreateDevicePayload(device);
 
-    const createdDevice = await super.create(payload);
+    console.log("Payload");
+    console.log(payload);
 
-    return toDeviceModel(createdDevice);
+    return await super.create(payload);
   }
 
   /**
@@ -48,6 +52,8 @@ class DeviceService extends BaseService {
    */
   async update(id, device) {
     const payload = toUpdateDevicePayload(device);
+
+    console.log("DeviceService.update()", id, payload);
 
     const updatedDevice = await super.update(id, payload);
 

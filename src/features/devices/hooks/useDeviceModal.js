@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 const useDeviceModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,12 +32,23 @@ const useDeviceModal = () => {
     setIsOpen(false);
   }, []);
 
+  /**
+   * Choose Mode: Create or Edit.
+   */
+  const mode = useMemo(
+    () => (selectedDevice ? "edit" : "create"),
+
+    [selectedDevice],
+  );
+
   return {
     isOpen,
 
-    selectedDevice,
+    mode,
 
-    isEditing: !!selectedDevice,
+    isEditing: mode === "edit",
+
+    selectedDevice,
 
     openCreate,
 

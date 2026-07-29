@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,7 +57,15 @@ const DeviceForm = forwardRef(
      * Reset connection verification
      * whenever connection info changes.
      */
+
+    const firstRender = useRef(true);
+
     useEffect(() => {
+      if (firstRender.current) {
+        firstRender.current = false;
+        return;
+      }
+
       onConnectionChange?.();
     }, [connectionFields, onConnectionChange]);
 
@@ -65,7 +73,20 @@ const DeviceForm = forwardRef(
      * Methods exposed to parent modal.
      */
     useImperativeHandle(ref, () => ({
-      submit: () => handleSubmit(onSubmit)(),
+      // submit: () => handleSubmit(onSubmit)(),
+      submit: () => {
+        console.log("DeviceForm.submit()");
+
+        return handleSubmit(
+          (values) => {
+            console.log("React Hook Form Valid", values);
+            onSubmit(values);
+          },
+          (errors) => {
+            console.log("React Hook Form Errors", errors);
+          },
+        )();
+      },
 
       reset: () => reset(DEFAULT_VALUES),
 

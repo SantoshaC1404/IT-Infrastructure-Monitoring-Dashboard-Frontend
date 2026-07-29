@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import Button from "../../../components/common/Button";
 import Modal from "../../../components/common/Modal";
+import Button from "../../../components/common/Button";
 
 import DeviceForm from "../components/DeviceForm";
 
@@ -15,33 +15,51 @@ const DeviceModal = ({
 }) => {
   const formRef = useRef(null);
 
-  const isEditing = !!device;
-
-  const [testingConnection, setTestingConnection] = useState(false);
+  const isEditing = Boolean(device);
 
   const [saving, setSaving] = useState(false);
+
+  const [testingConnection, setTestingConnection] = useState(false);
 
   const [connectionVerified, setConnectionVerified] = useState(false);
 
   const [connectionResult, setConnectionResult] = useState(null);
 
   /**
-   * Reset modal state whenever opened
-   * or switching between create/edit.
+   * Reset modal every time it opens.
    */
   useEffect(() => {
     if (!open) return;
 
-    setConnectionVerified(false);
+    setSaving(false);
+
+    setTestingConnection(false);
+
     setConnectionResult(null);
+
+    /**
+     * Add Device
+     */
+    if (!device) {
+      setConnectionVerified(false);
+      return;
+    }
+
+    /**
+     * Edit Device
+     * (Later we'll compare dirty fields)
+     */
+    setConnectionVerified(true);
   }, [open, device]);
 
   /**
-   * Called whenever
-   * connection fields change.
+   * Connection fields changed.
    */
   const handleConnectionChange = () => {
-    setConnectionVerified(false);
+    if (!isEditing) {
+      setConnectionVerified(false);
+    }
+
     setConnectionResult(null);
   };
 
@@ -49,16 +67,29 @@ const DeviceModal = ({
    * Test SSH connection.
    */
   const handleTestConnection = async () => {
-    const values = formRef.current.getValues();
-
     try {
       setTestingConnection(true);
 
+      const values = formRef.current.getValues();
+
+      console.log("Testing Connection:", values);
+
       const result = await onTestConnection(values);
+
+      console.log("Connection Result:", result);
 
       setConnectionVerified(result.success);
 
       setConnectionResult(result);
+    } catch (err) {
+      console.error(err);
+
+      setConnectionVerified(false);
+
+      setConnectionResult({
+        success: false,
+        message: err.message,
+      });
     } finally {
       setTestingConnection(false);
     }
@@ -68,7 +99,15 @@ const DeviceModal = ({
    * Save Device.
    */
   const handleSubmit = async (values) => {
+    console.log("Submitting Device:", values);
+
+    console.log("isEditing =", isEditing);
+
+    console.log("connectionVerified =", connectionVerified);
+
     if (!connectionVerified) {
+      console.log("Connection not verified.");
+
       return;
     }
 
@@ -76,19 +115,31 @@ const DeviceModal = ({
       setSaving(true);
 
       if (isEditing) {
+        console.log("Calling onUpdate()");
+
         await onUpdate(device.id, values);
+
+        console.log("Update completed");
       } else {
+        console.log("onCreate =", onCreate);
+        
+        console.log("typeof =", typeof onCreate);
+
         await onCreate(values);
+
+        console.log("Returned from onCreate");
       }
 
       handleClose();
+    } catch (err) {
+      console.error("Save failed", err);
     } finally {
       setSaving(false);
     }
   };
 
   /**
-   * Close Modal.
+   * Close modal.
    */
   const handleClose = () => {
     formRef.current?.reset();
@@ -108,19 +159,37 @@ const DeviceModal = ({
       size="lg"
       footer={
         <>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} disabled={saving}>
             Cancel
           </Button>
 
           <Button
             variant="secondary"
             loading={testingConnection}
+            disabled={saving}
             onClick={handleTestConnection}
           >
             Test Connection
           </Button>
 
-          <Button loading={saving} onClick={() => formRef.current.submit()}>
+          {/* <Button
+            loading={saving}
+            disabled={!connectionVerified}
+            onClick={() => formRef.current.submit()}
+          >
+            {isEditing ? "Update Device" : "Save Device"}
+          </Button> */}
+
+          <Button
+            loading={saving}
+            disabled={!connectionVerified}
+            onClick={() => {
+              console.log("SAVE BUTTON CLICKED");
+              console.log(formRef.current);
+
+              formRef.current?.submit();
+            }}
+          >
             {isEditing ? "Update Device" : "Save Device"}
           </Button>
         </>

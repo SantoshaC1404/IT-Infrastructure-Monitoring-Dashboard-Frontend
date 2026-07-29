@@ -2,6 +2,7 @@ import Button from "../../../components/common/Button";
 import SearchInput from "../../../components/common/SearchInput";
 
 import { FiPlus } from "react-icons/fi";
+import AddDeviceButton from "./AddDeviceButton";
 
 const DeviceToolbar = ({ search, onSearchChange, onAddDevice }) => {
   return (
@@ -13,9 +14,10 @@ const DeviceToolbar = ({ search, onSearchChange, onAddDevice }) => {
         className="w-full md:w-80"
       />
 
-      <Button onClick={onAddDevice} leftIcon={<FiPlus />}>
+      {/* <Button onClick={onAddDevice} leftIcon={<FiPlus />}>
         Add Device
-      </Button>
+      </Button> */}
+      <AddDeviceButton onClick={onAddDevice} />
     </div>
   );
 };

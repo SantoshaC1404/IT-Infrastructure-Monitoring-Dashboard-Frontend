@@ -7,6 +7,13 @@ export const deviceSchema = z.object({
     .min(3, "Device name must be at least 3 characters.")
     .max(100, "Device name is too long."),
 
+  device_type: z.enum([
+    "LINUX",
+    "WINDOWS",
+    "SWITCH",
+    "UPS",
+  ]),
+
   ip_address: z
     .string()
     .trim()
