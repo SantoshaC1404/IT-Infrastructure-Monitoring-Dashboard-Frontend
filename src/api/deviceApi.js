@@ -7,10 +7,15 @@ export const getAll = () => {
 };
 
 export const create = (payload) => {
-  return api.post(BASE_URL, payload);
+  console.log("deviceApi.create()");
+  console.log(payload);
+
+  return api.post("/devices", payload);
 };
 
 export const update = (id, payload) => {
+  console.log("deviceApi.update()", id, payload);
+
   return api.put(`${BASE_URL}/${id}`, payload);
 };
 
