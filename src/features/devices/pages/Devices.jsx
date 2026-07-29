@@ -74,8 +74,8 @@ const Device = () => {
 
       <DeviceModal
         open={deviceModal.isOpen}
+        device={deviceModal.selectedDevice}
         onClose={deviceModal.close}
-        // onCreate={addDevice}
         onCreate={async (data) => {
           console.log("Device.jsx onCreate");
           console.log(data);
@@ -84,6 +84,15 @@ const Device = () => {
 
           console.log("Device.jsx addDevice returned");
           console.log(result);
+
+          return result;
+        }}
+        onUpdate={async (id, data) => {
+          console.log("Device.jsx onUpdate", id, data);
+
+          const result = await updateDevice(id, data);
+
+          console.log("Device.jsx updateDevice returned", result);
 
           return result;
         }}

@@ -10,13 +10,13 @@ export const create = (payload) => {
   console.log("deviceApi.create()");
   console.log(payload);
 
-  return api.post("/devices", payload);
+  return api.post(BASE_URL, payload);
 };
 
 export const update = (id, payload) => {
   console.log("deviceApi.update()", id, payload);
 
-  return api.put(`${BASE_URL}/${id}`, payload);
+  return api.patch(`${BASE_URL}/${id}`, payload);
 };
 
 export const deleteDevice = (id) => {
