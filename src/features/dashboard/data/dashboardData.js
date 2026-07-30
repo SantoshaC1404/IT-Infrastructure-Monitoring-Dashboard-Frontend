@@ -5,7 +5,10 @@ import {
     FiBox,
     FiAlertTriangle,
     FiCpu,
+    FiActivity,
+    FiSlash,
 } from "react-icons/fi";
+
 
 export const statsCards = [
     {
@@ -191,3 +194,4 @@ export const networkData = [
         outgoing: 150,
     },
 ];
+
