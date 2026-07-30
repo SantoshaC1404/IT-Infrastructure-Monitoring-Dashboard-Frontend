@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import Login from "../pages/auth/Login";
-import Dashboard from "../pages/dashboard/Dashboard";
+import Dashboard from "../features/dashboard/pages/Dashboard";
 import Device from "../features/devices/pages/Devices";
 
 const AppRoutes = () => {

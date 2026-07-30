@@ -1,4 +1,4 @@
-import DashboardLayout from "../../../components/layout/DashboardLayout";
+import DashboardLayout from "../../dashboard/components/DashboardLayout";
 import PageHeader from "../../../components/common/PageHeader";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 
