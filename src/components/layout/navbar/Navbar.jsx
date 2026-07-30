@@ -3,8 +3,8 @@ import { RiExpandHorizontalSFill } from "react-icons/ri";
 
 import ProfileMenu from "./ProfileMenu";
 import SearchBar from "./SearchBar";
-import ThemeToggle from "./ThemeToggle";
-import NotificationBell from "../../features/notifications/components/NotificationBell";
+import ThemeToggle from "../ThemeToggle";
+import NotificationBell from "../../../features/notifications/components/NotificationBell";
 
 const Navbar = ({ onMenuClick }) => {
   return (
