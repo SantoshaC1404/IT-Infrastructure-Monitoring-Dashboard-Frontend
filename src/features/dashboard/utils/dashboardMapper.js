@@ -1,12 +1,16 @@
 
 export const toDashboardSummary = (data) => ({
-  totalDevices: data.total_devices,
+    totalDevices: data.total_devices,
 
-  onlineDevices: data.online_devices,
+    onlineDevices: data.online_devices,
 
-  offlineDevices: data.offline_devices,
+    offlineDevices: data.offline_devices,
 
-  monitoringEnabled: data.monitoring_enabled,
+    monitoringEnabled: data.monitoring_enabled,
+
+    monitoringDisabled: data.monitoring_disabled,
+
+    deviceTypes: data.device_types ?? {},
 });
 
 

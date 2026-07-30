@@ -1,4 +1,10 @@
-import { FiServer, FiCheckCircle, FiXCircle, FiActivity } from "react-icons/fi";
+import {
+  FiServer,
+  FiCheckCircle,
+  FiXCircle,
+  FiActivity,
+  FiSlash,
+} from "react-icons/fi";
 
 import StatsCard from "./StatsCard";
 
@@ -36,14 +42,24 @@ const DashboardStats = ({ summary }) => {
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
     },
+    {
+      title: "Monitoring Disabled",
+      value: summary.monitoringDisabled,
+      subtitle: "Monitoring turned off",
+      icon: FiSlash,
+      iconBg: "bg-yellow-100",
+      iconColor: "text-yellow-600",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card) => (
-        <StatsCard key={card.title} {...card} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+        {cards.map((card) => (
+          <StatsCard key={card.title} {...card} />
+        ))}
+      </div>
+    </>
   );
 };
 
