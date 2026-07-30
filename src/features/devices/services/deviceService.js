@@ -44,7 +44,38 @@ class DeviceService extends BaseService {
     console.log("Payload");
     console.log(payload);
 
-    return await super.create(payload);
+    const createdDevice = await super.create(payload);
+
+    const extractDeviceData = (value) => {
+      if (!value || typeof value !== "object") {
+        return null;
+      }
+
+      if (value.id && value.name) {
+        return value;
+      }
+
+      if (value.device) {
+        return extractDeviceData(value.device);
+      }
+
+      if (value.data) {
+        return extractDeviceData(value.data);
+      }
+
+      if (value.attributes && typeof value.attributes === "object") {
+        return {
+          id: value.id,
+          ...value.attributes,
+        };
+      }
+
+      return value;
+    };
+
+    const deviceData = extractDeviceData(createdDevice) ?? createdDevice;
+
+    return toDeviceModel(deviceData);
   }
 
   /**

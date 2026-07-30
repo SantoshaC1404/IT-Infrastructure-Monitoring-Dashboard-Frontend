@@ -71,9 +71,12 @@ const useDevices = () => {
 
       setDevices((prev) => [...prev, device]);
 
+      showSuccess("Device added successfully.");
+
       return device;
     } catch (err) {
-      console.error(err);
+      console.error("Create Device Error:", err);
+      showError(err.message || "Unable to add device.");
       throw err;
     }
   };
