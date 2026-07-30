@@ -17,8 +17,6 @@ export const toCreateDevicePayload = (device) => ({
 
   ssh_port: Number(device.ssh_port),
 
-  port: Number(device.ssh_port),
-
   username: device.username.trim(),
 
   password: device.password,
@@ -43,8 +41,6 @@ export const toUpdateDevicePayload = (device) => ({
   ip_address: device.ip_address.trim(),
 
   ssh_port: Number(device.ssh_port),
-
-  port: Number(device.ssh_port),
 
   username: device.username.trim(),
 

@@ -73,7 +73,21 @@ class DeviceService extends BaseService {
       return value;
     };
 
-    const deviceData = extractDeviceData(createdDevice) ?? createdDevice;
+    const deviceData = extractDeviceData(createdDevice);
+
+    if (!deviceData || !deviceData.name) {
+      console.warn(
+        "DeviceService.create() received unexpected response, falling back to request payload",
+        createdDevice,
+      );
+
+      const fallbackDevice = {
+        ...payload,
+        id: createdDevice?.id || `temp-${Date.now()}`,
+      };
+
+      return toDeviceModel(fallbackDevice);
+    }
 
     return toDeviceModel(deviceData);
   }

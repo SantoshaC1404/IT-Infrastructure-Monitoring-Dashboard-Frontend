@@ -25,6 +25,8 @@ const DeviceModal = ({
 
   const [connectionResult, setConnectionResult] = useState(null);
 
+  const isConnectionVerified = isEditing || connectionVerified;
+
   /**
    * Reset modal every time it opens.
    */
@@ -32,16 +34,14 @@ const DeviceModal = ({
     if (!open) return;
 
     setSaving(false);
-
     setTestingConnection(false);
-
     setConnectionResult(null);
+    setConnectionVerified(false);
 
     /**
      * Add Device
      */
     if (!device) {
-      setConnectionVerified(false);
       return;
     }
 
@@ -58,9 +58,8 @@ const DeviceModal = ({
   const handleConnectionChange = () => {
     if (!isEditing) {
       setConnectionVerified(false);
+      setConnectionResult(null);
     }
-
-    setConnectionResult(null);
   };
 
   /**
@@ -78,14 +77,12 @@ const DeviceModal = ({
 
       console.log("Connection Result:", result);
 
-      setConnectionVerified(result.success);
-
+      setConnectionVerified(result?.success === true);
       setConnectionResult(result);
     } catch (err) {
       console.error(err);
 
       setConnectionVerified(false);
-
       setConnectionResult({
         success: false,
         message: err.message,
@@ -103,13 +100,8 @@ const DeviceModal = ({
 
     console.log("isEditing =", isEditing);
 
-    console.log("connectionVerified =", connectionVerified);
-
-    if (!connectionVerified) {
-      console.log("Connection not verified.");
-
-      return;
-    }
+    console.log("connectionResult =", connectionResult);
+    console.log("isConnectionVerified =", isConnectionVerified);
 
     try {
       setSaving(true);
@@ -122,7 +114,7 @@ const DeviceModal = ({
         console.log("Update completed");
       } else {
         console.log("onCreate =", onCreate);
-        
+
         console.log("typeof =", typeof onCreate);
 
         await onCreate(values);
@@ -144,9 +136,8 @@ const DeviceModal = ({
   const handleClose = () => {
     formRef.current?.reset();
 
-    setConnectionVerified(false);
-
     setConnectionResult(null);
+    setConnectionVerified(false);
 
     onClose();
   };
@@ -172,23 +163,11 @@ const DeviceModal = ({
             Test Connection
           </Button>
 
-          {/* <Button
-            loading={saving}
-            disabled={!connectionVerified}
-            onClick={() => formRef.current.submit()}
-          >
-            {isEditing ? "Update Device" : "Save Device"}
-          </Button> */}
-
           <Button
+            type="button"
             loading={saving}
-            disabled={!connectionVerified}
-            onClick={() => {
-              console.log("SAVE BUTTON CLICKED");
-              console.log(formRef.current);
-
-              formRef.current?.submit();
-            }}
+            disabled={saving}
+            onClick={() => formRef.current?.submit()}
           >
             {isEditing ? "Update Device" : "Save Device"}
           </Button>

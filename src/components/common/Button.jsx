@@ -19,6 +19,7 @@ const Button = ({
   disabled = false,
   fullWidth = false,
   onClick,
+  ...props
 }) => {
   return (
     <button
@@ -41,6 +42,7 @@ const Button = ({
         ${fullWidth ? "w-full" : ""}
         ${loading || disabled ? "cursor-not-allowed opacity-60" : ""}
       `}
+      {...props}
     >
       {loading && <Loader2 className="animate-spin" size={18} />}
 

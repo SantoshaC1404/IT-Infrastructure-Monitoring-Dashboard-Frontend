@@ -98,7 +98,19 @@ const DeviceForm = forwardRef(
     }));
 
     return (
-      <form className="space-y-8">
+      <form
+        id="device-form"
+        className="space-y-8"
+        onSubmit={handleSubmit(
+          (values) => {
+            console.log("DeviceForm.onSubmit", values);
+            onSubmit(values);
+          },
+          (errors) => {
+            console.log("DeviceForm.onSubmit Errors", errors);
+          },
+        )}
+      >
         <DeviceBasicInfo register={register} errors={errors} />
 
         <DeviceCredentials register={register} errors={errors} />
