@@ -19,14 +19,10 @@ const Button = ({
   disabled = false,
   fullWidth = false,
   onClick,
+  className = "",
   ...props
 }) => {
-  return (
-    <button
-      type={type}
-      disabled={loading || disabled}
-      onClick={onClick}
-      className={`
+  const mergedClassName = `
         flex
         items-center
         justify-center
@@ -41,7 +37,15 @@ const Button = ({
         ${variants[variant]}
         ${fullWidth ? "w-full" : ""}
         ${loading || disabled ? "cursor-not-allowed opacity-60" : ""}
-      `}
+        ${className}
+      `.trim();
+
+  return (
+    <button
+      type={type}
+      disabled={loading || disabled}
+      onClick={onClick}
+      className={mergedClassName}
       {...props}
     >
       {loading && <Loader2 className="animate-spin" size={18} />}
