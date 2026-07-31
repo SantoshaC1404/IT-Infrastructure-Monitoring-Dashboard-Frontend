@@ -8,7 +8,7 @@ import TableSkeleton from "./TableSkeleton";
 const DataTable = ({
   title,
   subtitle,
-  headerAction,
+  action,
 
   columns = [],
   data = [],
@@ -28,17 +28,21 @@ const DataTable = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [showAll, setShowAll] = useState(false);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [data]);
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
-  const paginatedData = useMemo(() => {
+  const displayedRows = useMemo(() => {
+    if (showAll) return data;
+
     const start = (currentPage - 1) * rowsPerPage;
 
     return data.slice(start, start + rowsPerPage);
-  }, [currentPage, data, rowsPerPage]);
+  }, [data, currentPage, rowsPerPage, showAll]);
 
   if (loading) {
     return (
@@ -54,29 +58,27 @@ const DataTable = ({
   }
 
   return (
-    <Card className="overflow-hidden">
-      {(title || subtitle || headerAction) && (
-        <div className="flex items-center justify-between border-b px-6 py-5">
+    <Card>
+      {(title || subtitle || action) && (
+        <div className="mb-6 flex items-start justify-between">
           <div>
             {title && (
-              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+              <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
             )}
 
-            {subtitle && (
-              <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
-            )}
+            {subtitle && <p className="mt-2 text-gray-500">{subtitle}</p>}
           </div>
 
-          {headerAction}
+          {action}
         </div>
       )}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-left">
-          <thead className="border-b bg-gray-50">
+        <table className="min-w-full">
+          <thead className="border-y bg-gray-50">
             <tr>
               {selectable && (
-                <th className="w-12 px-5 py-4 text-center">
+                <th className="px-8 py-5 text-left">
                   <input type="checkbox" />
                 </th>
               )}
@@ -84,14 +86,14 @@ const DataTable = ({
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className="whitespace-nowrap px-5 py-4 text-sm font-semibold text-gray-700"
+                  className="px-8 py-5 text-left text-lg font-semibold text-slate-700"
                 >
                   {column.label}
                 </th>
               ))}
 
               {renderActions && (
-                <th className="w-32 px-5 py-4 text-center text-sm font-semibold text-gray-700">
+                <th className="px-8 py-5 text-center text-lg font-semibold text-slate-700">
                   Actions
                 </th>
               )}
@@ -99,7 +101,7 @@ const DataTable = ({
           </thead>
 
           <tbody>
-            {data.length === 0 ? (
+            {displayedRows.length === 0 ? (
               <tr>
                 <td
                   colSpan={
@@ -107,27 +109,22 @@ const DataTable = ({
                     (renderActions ? 1 : 0) +
                     (selectable ? 1 : 0)
                   }
-                  className="py-16"
                 >
                   {emptyState ?? <EmptyState />}
                 </td>
               </tr>
             ) : (
-              paginatedData.map((row) => (
+              displayedRows.map((row) => (
                 <tr
                   key={row.id}
                   onClick={() => onRowClick?.(row)}
-                  className={`
-                    border-b
-                    transition
-                    duration-200
-                    hover:bg-gray-50
-                    ${onRowClick ? "cursor-pointer" : ""}
-                  `}
+                  className={`border-b transition hover:bg-gray-50 ${
+                    onRowClick ? "cursor-pointer" : ""
+                  }`}
                 >
                   {selectable && (
                     <td
-                      className="px-5 py-4 text-center"
+                      className="px-8 py-6"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
@@ -138,14 +135,10 @@ const DataTable = ({
                     </td>
                   )}
 
-                  {columns.map((column, index) => (
+                  {columns.map((column) => (
                     <td
                       key={column.key}
-                      className={`px-5 py-4 whitespace-nowrap text-sm ${
-                        index === 0
-                          ? "font-semibold text-gray-900"
-                          : "text-gray-700"
-                      }`}
+                      className="px-8 py-6 text-lg text-slate-700"
                     >
                       {column.render ? column.render(row) : row[column.key]}
                     </td>
@@ -153,12 +146,10 @@ const DataTable = ({
 
                   {renderActions && (
                     <td
-                      className="px-5 py-4"
+                      className="px-8 py-6 text-center"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="flex justify-center gap-2">
-                        {renderActions(row)}
-                      </div>
+                      {renderActions(row)}
                     </td>
                   )}
                 </tr>
@@ -168,13 +159,22 @@ const DataTable = ({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="border-t">
-          <TablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+      {data.length > rowsPerPage && (
+        <div className="mt-5 flex items-center justify-between">
+          <button
+            onClick={() => setShowAll((prev) => !prev)}
+            className="font-medium text-blue-600 hover:underline"
+          >
+            {showAll ? "Show Less" : "View All"}
+          </button>
+
+          {!showAll && totalPages > 1 && (
+            <TablePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       )}
     </Card>

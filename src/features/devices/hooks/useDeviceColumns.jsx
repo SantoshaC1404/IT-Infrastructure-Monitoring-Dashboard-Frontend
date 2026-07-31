@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 
-import DeviceAvatar from "../table/DeviceAvatar";
 import DeviceActions from "../table/DeviceActions";
 import DeviceStatusBadge from "../table/DeviceStatusBadge";
 import DeviceMonitoringBadge from "../table/DeviceMonitoringBadge";
@@ -12,11 +11,11 @@ const useDeviceColumns = ({ onView, onEdit, onDelete }) => {
         key: "name",
         label: "Device",
         render: (device) => (
-          <DeviceAvatar
-            name={device.name}
-            hostname={device.ip_address}
-            deviceType={device.device_type}
-          />
+          <div>
+            <p className="font-semibold text-gray-900">{device.name}</p>
+
+            <p className="text-sm text-gray-500">{device.device_type}</p>
+          </div>
         ),
       },
 
@@ -26,13 +25,24 @@ const useDeviceColumns = ({ onView, onEdit, onDelete }) => {
       },
 
       {
-        key: "ssh_port",
-        label: "SSH Port",
+        key: "cpu_usage",
+        label: "CPU",
+        render: (device) =>
+          device.cpu_usage != null ? `${device.cpu_usage}%` : "--",
       },
 
       {
-        key: "username",
-        label: "Username",
+        key: "memory_usage",
+        label: "Memory",
+        render: (device) =>
+          device.memory_usage != null ? `${device.memory_usage}%` : "--",
+      },
+
+      {
+        key: "disk_usage",
+        label: "Disk",
+        render: (device) =>
+          device.disk_usage != null ? `${device.disk_usage}%` : "--",
       },
 
       {
