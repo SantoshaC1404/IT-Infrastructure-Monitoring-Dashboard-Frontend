@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiChevronUp, FiChevronDown } from "react-icons/fi";
+
 import Card from "./Card";
 import EmptyState from "./EmptyState";
 import TablePagination from "./TablePagination";
 import TableSkeleton from "./TableSkeleton";
 
 const DataTable = ({
+  title,
+  subtitle,
+  headerAction,
+
   columns = [],
   data = [],
   loading = false,
@@ -32,6 +36,7 @@ const DataTable = ({
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
+
     return data.slice(start, start + rowsPerPage);
   }, [currentPage, data, rowsPerPage]);
 
@@ -49,13 +54,29 @@ const DataTable = ({
   }
 
   return (
-    <Card>
-      <div className="max-h-162.5 overflow-auto rounded-xl">
-        <table className="min-w-full border-collapse">
-          <thead className="sticky top-0 z-20 border-b bg-white">
+    <Card className="overflow-hidden">
+      {(title || subtitle || headerAction) && (
+        <div className="flex items-center justify-between border-b px-6 py-5">
+          <div>
+            {title && (
+              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+            )}
+
+            {subtitle && (
+              <p className="mt-1 text-sm text-gray-500">{subtitle}</p>
+            )}
+          </div>
+
+          {headerAction}
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-left">
+          <thead className="border-b bg-gray-50">
             <tr>
               {selectable && (
-                <th className="w-12 px-4 py-4 text-center">
+                <th className="w-12 px-5 py-4 text-center">
                   <input type="checkbox" />
                 </th>
               )}
@@ -63,14 +84,14 @@ const DataTable = ({
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className="whitespace-nowrap px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500"
+                  className="whitespace-nowrap px-5 py-4 text-sm font-semibold text-gray-700"
                 >
                   {column.label}
                 </th>
               ))}
 
               {renderActions && (
-                <th className="w-20 px-4 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <th className="w-32 px-5 py-4 text-center text-sm font-semibold text-gray-700">
                   Actions
                 </th>
               )}
@@ -86,6 +107,7 @@ const DataTable = ({
                     (renderActions ? 1 : 0) +
                     (selectable ? 1 : 0)
                   }
+                  className="py-16"
                 >
                   {emptyState ?? <EmptyState />}
                 </td>
@@ -97,15 +119,15 @@ const DataTable = ({
                   onClick={() => onRowClick?.(row)}
                   className={`
                     border-b
-                    transition-all
+                    transition
                     duration-200
-                    hover:bg-blue-50
+                    hover:bg-gray-50
                     ${onRowClick ? "cursor-pointer" : ""}
                   `}
                 >
                   {selectable && (
                     <td
-                      className="px-4 py-4 text-center"
+                      className="px-5 py-4 text-center"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <input
@@ -116,10 +138,14 @@ const DataTable = ({
                     </td>
                   )}
 
-                  {columns.map((column) => (
+                  {columns.map((column, index) => (
                     <td
                       key={column.key}
-                      className="whitespace-nowrap px-4 py-4"
+                      className={`px-5 py-4 whitespace-nowrap text-sm ${
+                        index === 0
+                          ? "font-semibold text-gray-900"
+                          : "text-gray-700"
+                      }`}
                     >
                       {column.render ? column.render(row) : row[column.key]}
                     </td>
@@ -127,10 +153,12 @@ const DataTable = ({
 
                   {renderActions && (
                     <td
-                      className="px-4 py-4 text-center"
+                      className="px-5 py-4"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      {renderActions(row)}
+                      <div className="flex justify-center gap-2">
+                        {renderActions(row)}
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -138,15 +166,17 @@ const DataTable = ({
             )}
           </tbody>
         </table>
+      </div>
 
-        {totalPages > 1 && (
+      {totalPages > 1 && (
+        <div className="border-t">
           <TablePagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
-        )}
-      </div>
+        </div>
+      )}
     </Card>
   );
 };

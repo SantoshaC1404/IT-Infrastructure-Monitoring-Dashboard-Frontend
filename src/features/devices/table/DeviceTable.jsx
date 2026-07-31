@@ -11,9 +11,11 @@ const DeviceTable = ({ devices, loading, onView, onEdit, onDelete }) => {
 
   return (
     <DataTable
-      loading={loading}
+      title="Device Inventory"
+      subtitle="Manage and monitor all infrastructure devices"
       columns={columns}
       data={devices}
+      loading={loading}
       emptyState={
         <EmptyState
           title="No Devices Found"

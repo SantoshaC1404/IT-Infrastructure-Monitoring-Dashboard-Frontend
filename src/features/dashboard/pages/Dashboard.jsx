@@ -10,7 +10,7 @@ import PieChartCard from "../../../components/charts/PieChartCard";
 import NetworkChartCard from "../../../components/charts/NetworkChartCard";
 import RecentAlerts from "../../../components/dashboard/RecentAlerts";
 import RecentLogs from "../../../components/dashboard/RecentLogs";
-import DeviceStatusTable from "../../../components/dashboard/DeviceStatusTable";
+import DeviceStatusTable from "../components/DeviceStatusTable";
 
 import {
   statsCards,
