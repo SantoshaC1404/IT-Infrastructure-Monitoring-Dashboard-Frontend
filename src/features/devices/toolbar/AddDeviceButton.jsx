@@ -1,7 +1,7 @@
 import { FiPlus } from "react-icons/fi";
 import Button from "../../../components/common/Button";
 
-const AddDeviceButton = ({ onClick }) => {
+const console = ({ onClick }) => {
   return (
     <Button onClick={onClick} className="flex items-center gap-2">
       <FiPlus size={18} />
@@ -10,4 +10,4 @@ const AddDeviceButton = ({ onClick }) => {
   );
 };
 
-export default AddDeviceButton;
+export default console;

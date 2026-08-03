@@ -22,9 +22,12 @@ import {
   recentLogs,
   deviceStatus,
 } from "../data/dashboardData";
+import useDashboardDevices from "../hooks/useDashboardDevices";
 
 const Dashboard = () => {
   const { summary, loading, refresh } = useDashboard();
+
+  const { devices, loading: devicesLoading } = useDashboardDevices();
 
   return (
     <DashboardLayout>
@@ -60,8 +63,15 @@ const Dashboard = () => {
       </div>
 
       {/* Device Status */}
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <DeviceStatusTable devices={deviceStatus} />
+      </div> */}
+
+      <div className="mt-8">
+        <DeviceStatusTable
+          devices={devices}
+          loading={devicesLoading}
+        />
       </div>
     </DashboardLayout>
   );

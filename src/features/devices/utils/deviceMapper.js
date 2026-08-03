@@ -92,11 +92,24 @@ export const toDeviceModel = (device) => ({
 
   status: device.status ?? "UNKNOWN",
 
+  cpu_usage: Number(device.cpu_usage ?? 0),
+
+  memory_usage: Number(device.memory_usage ?? 0),
+
+  disk_usage: Number(device.disk_usage ?? 0),
+
+  login_source: device.login_source,
+
+  last_login_time: device.last_login_time,
+
   last_seen: device.last_seen ?? null,
 
+  uptime: device.uptime ?? 0,
+  
   created_at: device.created_at,
 
   updated_at: device.updated_at,
+
 });
 
 /**

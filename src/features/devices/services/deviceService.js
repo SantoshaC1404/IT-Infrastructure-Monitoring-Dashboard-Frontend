@@ -36,13 +36,13 @@ class DeviceService extends BaseService {
    * Create device.
    */
   async create(device) {
-    console.log("DeviceService.create()");
-    console.log(device);
+    // console.log("DeviceService.create()");
+    // console.log(device);
 
     const payload = toCreateDevicePayload(device);
 
-    console.log("Payload");
-    console.log(payload);
+    // console.log("Payload");
+    // console.log(payload);
 
     const createdDevice = await super.create(payload);
 
@@ -76,10 +76,10 @@ class DeviceService extends BaseService {
     const deviceData = extractDeviceData(createdDevice);
 
     if (!deviceData || !deviceData.name) {
-      console.warn(
-        "DeviceService.create() received unexpected response, falling back to request payload",
-        createdDevice,
-      );
+      // console.warn(
+      //   "DeviceService.create() received unexpected response, falling back to request payload",
+      //   createdDevice,
+      // );
 
       const fallbackDevice = {
         ...payload,
@@ -98,7 +98,7 @@ class DeviceService extends BaseService {
   async update(id, device) {
     const payload = toUpdateDevicePayload(device);
 
-    console.log("DeviceService.update()", id, payload);
+    // console.log("DeviceService.update()", id, payload);
 
     const updatedDevice = await super.update(id, payload);
 

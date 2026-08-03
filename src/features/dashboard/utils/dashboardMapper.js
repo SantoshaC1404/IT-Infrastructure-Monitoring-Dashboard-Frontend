@@ -1,4 +1,3 @@
-
 export const toDashboardSummary = (data) => ({
     totalDevices: data.total_devices,
 
@@ -11,30 +10,24 @@ export const toDashboardSummary = (data) => ({
     monitoringDisabled: data.monitoring_disabled,
 
     deviceTypes: data.device_types ?? {},
+
 });
 
 
-/*
-export const toDashboardSummary = (devices = []) => {
-    const totalDevices = devices.length;
-
-    const onlineDevices = devices.filter(
-        (device) => device.status === "ONLINE",
-    ).length;
-
-    const offlineDevices = devices.filter(
-        (device) => device.status === "OFFLINE",
-    ).length;
-
-    const monitoringEnabled = devices.filter(
-        (device) => device.monitoring_enabled,
-    ).length;
-
-    return {
-        totalDevices,
-        onlineDevices,
-        offlineDevices,
-        monitoringEnabled,
-    };
+const extractDevices = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload.devices)) return payload.devices;
+  if (Array.isArray(payload.data)) return payload.data;
+  return [];
 };
-*/
+
+export const toDashboardDevices = (data) => {
+  const devices = extractDevices(data);
+
+  return devices.map((device) => ({
+    ...device,
+    cpu_usage: Number(device.cpu_usage ?? 0),
+    memory_usage: Number(device.memory_usage ?? 0),
+    disk_usage: Number(device.disk_usage ?? 0),
+  }));
+};

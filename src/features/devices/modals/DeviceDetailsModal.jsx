@@ -1,12 +1,9 @@
 import {
   FiCpu,
-  FiGlobe,
-  FiClock,
-  FiUser,
   FiHardDrive,
   FiActivity,
   FiCalendar,
-  FiX,
+  FiLogIn,
 } from "react-icons/fi";
 
 import Modal from "../../../components/common/Modal";
@@ -40,7 +37,46 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
+const formatPercentage = (value) => {
+  if (value == null) return "-";
+
+  return `${Number(value).toFixed(1)}%`;
+};
+
+/** 
+const formatUptime = (uptime) => {
+  if (uptime == null) return "-";
+
+  const hours = Math.floor(uptime / 3600);
+  const minutes = Math.floor((uptime % 3600) / 60);
+  const seconds = uptime % 60;
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+};
+*/
+const formatUptime = (seconds) => {
+  if (seconds == null) return "-";
+
+  const days = Math.floor(seconds / 86400);
+
+  const hours = Math.floor((seconds % 86400) / 3600);
+
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (days > 0) {
+    return `${days}d ${hours}h ${minutes}m`;
+  }
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+
+  return `${minutes}m`;
+};
+
 const DeviceDetailsModal = ({ open, onClose, device }) => {
+  // console.log("Device Details:", device);
+
   if (!device) return null;
 
   return (
@@ -80,7 +116,7 @@ const DeviceDetailsModal = ({ open, onClose, device }) => {
 
         {/* Monitoring */}
 
-        <DetailCard icon={<FiActivity />} title="Monitoring">
+        {/* <DetailCard icon={<FiActivity />} title="Monitoring">
           <DetailItem
             label="Status"
             value={<StatusBadge status={device.status.toLowerCase()} />}
@@ -96,6 +132,59 @@ const DeviceDetailsModal = ({ open, onClose, device }) => {
           />
 
           <DetailItem label="Last Seen" value={formatDate(device.last_seen)} />
+        </DetailCard> */}
+
+        <DetailCard icon={<FiActivity />} title="Monitoring">
+          <DetailItem
+            label="Status"
+            value={<StatusBadge status={device.status.toLowerCase()} />}
+          />
+
+          <DetailItem
+            label="Monitoring"
+            value={
+              <StatusBadge
+                status={device.monitoring_enabled ? "enabled" : "disabled"}
+              />
+            }
+          />
+
+          <DetailItem
+            label="System Uptime"
+            value={formatUptime(device.uptime)}
+          />
+
+          <DetailItem label="Last Seen" value={formatDate(device.last_seen)} />
+        </DetailCard>
+
+        {/* Resource Usage */}
+
+        <DetailCard icon={<FiCpu />} title="Resource Usage">
+          <DetailItem
+            label="CPU Usage"
+            value={formatPercentage(device.cpu_usage)}
+          />
+
+          <DetailItem
+            label="Memory Usage"
+            value={formatPercentage(device.memory_usage)}
+          />
+
+          <DetailItem
+            label="Disk Usage"
+            value={formatPercentage(device.disk_usage)}
+          />
+        </DetailCard>
+
+        {/* Login Information */}
+
+        <DetailCard icon={<FiLogIn />} title="Login Information">
+          <DetailItem label="Login Source" value={device.login_source} />
+
+          <DetailItem
+            label="Last Login"
+            value={formatDate(device.last_login_time)}
+          />
         </DetailCard>
 
         {/* Timeline */}
