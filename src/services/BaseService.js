@@ -30,13 +30,31 @@ export default class BaseService {
   /**
    * Create resource.
    */
+  /*
   async create(payload) {
     try {
+      console.log("BaseService.create()", payload);
+
       const response = await this.api.create(payload);
+
+      console.log("BaseService Response", response.data);
+
       return response.data;
     } catch (error) {
       throw this.handleError(error);
     }
+  }
+    */
+  async create(payload) {
+    console.log("BaseService.create()");
+    console.log(payload);
+
+    const response = await this.api.create(payload);
+
+    console.log("Axios response");
+    console.log(response);
+
+    return response.data;
   }
 
   /**
@@ -44,7 +62,12 @@ export default class BaseService {
    */
   async update(id, payload) {
     try {
+      console.log("BaseService.update()", id, payload);
+
       const response = await this.api.update(id, payload);
+
+      console.log("BaseService Update Response", response.data);
+
       return response.data;
     } catch (error) {
       throw this.handleError(error);
