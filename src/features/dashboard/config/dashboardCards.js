@@ -9,8 +9,7 @@ import {
     FiSlash,
 } from "react-icons/fi";
 
-
-export const getDashboardCards = (summary) => [
+export const getDashboardCards = (summary, navigate) => [
     {
         title: "Total Devices",
         value: summary.totalDevices,
@@ -18,6 +17,7 @@ export const getDashboardCards = (summary) => [
         icon: FiServer,
         iconBg: "bg-blue-100",
         iconColor: "text-blue-600",
+        onClick: () => navigate("/devices"),
     },
     {
         title: "Online Devices",
@@ -26,6 +26,7 @@ export const getDashboardCards = (summary) => [
         icon: FiCheckCircle,
         iconBg: "bg-green-100",
         iconColor: "text-green-600",
+        onClick: () => navigate("/devices?status=ONLINE"),
     },
     {
         title: "Offline Devices",
@@ -34,6 +35,7 @@ export const getDashboardCards = (summary) => [
         icon: FiXCircle,
         iconBg: "bg-red-100",
         iconColor: "text-red-600",
+        onClick: () => navigate("/devices?status=OFFLINE"),
     },
     {
         title: "Monitoring Enabled",
@@ -42,6 +44,7 @@ export const getDashboardCards = (summary) => [
         icon: FiActivity,
         iconBg: "bg-purple-100",
         iconColor: "text-purple-600",
+        onClick: () => navigate("/devices?monitoring=true"),
     },
     {
         title: "Monitoring Disabled",
@@ -50,5 +53,6 @@ export const getDashboardCards = (summary) => [
         icon: FiSlash,
         iconBg: "bg-yellow-100",
         iconColor: "text-yellow-600",
+        onClick: () => navigate("/devices?monitoring=false"),
     },
 ];

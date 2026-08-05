@@ -18,6 +18,7 @@ export const statsCards = [
         icon: FiServer,
         iconBg: "bg-blue-100",
         iconColor: "text-blue-600",
+        onClick: () => navigate("/devices"),
     },
     {
         title: "Online Devices",

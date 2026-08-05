@@ -7,9 +7,11 @@ const StatsCard = ({
   icon: Icon,
   iconBg,
   iconColor,
+  onClick,
 }) => {
   return (
     <div
+      onClick={onClick}
       className="
         group
         h-full

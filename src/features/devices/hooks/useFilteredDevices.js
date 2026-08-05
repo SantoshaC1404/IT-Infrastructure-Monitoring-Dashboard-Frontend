@@ -1,26 +1,29 @@
 import { useMemo } from "react";
 
 const useFilteredDevices = ({
-  devices,
-  search,
-  statusFilter,
-  monitoringFilter,
+  devices = [],
+  search = "",
+  statusFilter = "all",
+  monitoringFilter = "all",
 }) => {
   return useMemo(() => {
     return devices.filter((device) => {
       /**
        * Search
        */
-      const matchesSearch = Object.values(device)
-        .join(" ")
-        .toLowerCase()
-        .includes(search.trim().toLowerCase());
+      const matchesSearch =
+        search === "" ||
+        Object.values(device)
+          .join(" ")
+          .toLowerCase()
+          .includes(search.trim().toLowerCase());
 
       /**
        * Status
        */
       const matchesStatus =
-        statusFilter === "all" || device.status?.toLowerCase() === statusFilter;
+        statusFilter === "all" ||
+        device.status?.toLowerCase() === statusFilter.toLowerCase();
 
       /**
        * Monitoring
@@ -31,7 +34,11 @@ const useFilteredDevices = ({
           ? device.monitoring_enabled
           : !device.monitoring_enabled);
 
-      return matchesSearch && matchesStatus && matchesMonitoring;
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesMonitoring
+      );
     });
   }, [devices, search, statusFilter, monitoringFilter]);
 };

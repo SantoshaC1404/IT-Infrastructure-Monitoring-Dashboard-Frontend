@@ -13,18 +13,17 @@ import RecentLogs from "../../../components/dashboard/RecentLogs";
 import DeviceStatusTable from "../components/DeviceStatusTable";
 
 import {
-  statsCards,
   cpuData,
   memoryData,
   diskData,
   networkData,
   recentAlerts,
-  recentLogs,
-  deviceStatus,
+  recentLogs
 } from "../data/dashboardData";
 import useDashboardDevices from "../hooks/useDashboardDevices";
 
 const Dashboard = () => {
+
   const { summary, loading, refresh } = useDashboard();
 
   const { devices, loading: devicesLoading } = useDashboardDevices();
@@ -68,10 +67,7 @@ const Dashboard = () => {
       </div> */}
 
       <div className="mt-8">
-        <DeviceStatusTable
-          devices={devices}
-          loading={devicesLoading}
-        />
+        <DeviceStatusTable devices={devices} loading={devicesLoading} />
       </div>
     </DashboardLayout>
   );

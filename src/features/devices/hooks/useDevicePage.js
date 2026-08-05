@@ -1,41 +1,69 @@
-import { useState, useCallback } from "react";
+import {
+    useState,
+    useCallback,
+    useEffect,
+} from "react";
+
+import { useSearchParams } from "react-router-dom";
 
 import useDevices from "./useDevices";
 import useDeviceModal from "./useDeviceModal";
 import useFilteredDevices from "./useFilteredDevices";
 
 const useDevicePage = () => {
+    const [searchParams] = useSearchParams();
+
     /**
-     * Search & Filters
+     * Search
      */
 
     const [search, setSearch] = useState("");
 
+    /**
+     * Filters
+     */
+
     const [statusFilter, setStatusFilter] = useState("all");
 
-    const [monitoringFilter, setMonitoringFilter] = useState("all");
+    const [monitoringFilter, setMonitoringFilter] =
+        useState("all");
 
     /**
-     * View Details
+     * Read filters from URL
      */
 
-    const [selectedDevice, setSelectedDevice] = useState(null);
+    useEffect(() => {
+        setStatusFilter(
+            searchParams.get("status") || "all",
+        );
+
+        setMonitoringFilter(
+            searchParams.get("monitoring") || "all",
+        );
+    }, [searchParams]);
 
     /**
-     * Delete
+     * Details Modal
      */
 
-    const [deviceToDelete, setDeviceToDelete] = useState(null);
+    const [selectedDevice, setSelectedDevice] =
+        useState(null);
 
     /**
-     * Device CRUD
+     * Delete Modal
+     */
+
+    const [deviceToDelete, setDeviceToDelete] =
+        useState(null);
+
+    /**
+     * Device API
      */
 
     const {
         devices,
         loading,
         error,
-
         addDevice,
         updateDevice,
         removeDevice,
@@ -49,7 +77,7 @@ const useDevicePage = () => {
     const deviceModal = useDeviceModal();
 
     /**
-     * Filtering
+     * Filter devices
      */
 
     const filteredDevices = useFilteredDevices({
@@ -60,7 +88,7 @@ const useDevicePage = () => {
     });
 
     /**
-     * View
+     * View Details
      */
 
     const handleView = useCallback((device) => {
@@ -92,71 +120,32 @@ const useDevicePage = () => {
     }, [deviceToDelete, removeDevice]);
 
     return {
-        /**
-         * Devices
-         */
-
         devices: filteredDevices,
 
         loading,
-
         error,
 
-        /**
-         * Search
-         */
-
         search,
-
         setSearch,
 
-        /**
-         * Filters
-         */
-
         statusFilter,
-
         setStatusFilter,
 
         monitoringFilter,
-
         setMonitoringFilter,
 
-        /**
-         * Details
-         */
-
         selectedDevice,
-
         handleView,
-
         closeDetails,
 
-        /**
-         * Delete
-         */
-
         deviceToDelete,
-
         requestDelete,
-
         cancelDelete,
-
         confirmDelete,
 
-        /**
-         * CRUD
-         */
-
         addDevice,
-
         updateDevice,
-
         testConnection,
-
-        /**
-         * Modal
-         */
 
         deviceModal,
     };
