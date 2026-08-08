@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Navbar from "../../../components/layout/navbar/Navbar";
 import Footer from "../../../components/layout/footer/Footer";
@@ -14,16 +14,33 @@ const DashboardLayout = ({ children }) => {
     return saved ? JSON.parse(saved) : false;
   });
 
+  const toggleCollapse = useCallback(() => {
+    setCollapsed((prev) => !prev);
+  }, []);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("sidebar-collapsed", JSON.stringify(collapsed));
   }, [collapsed]);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Sidebar
+      {/* <Sidebar
         collapsed={collapsed}
         onClose={() => setSidebarOpen(false)}
         onToggleCollapse={() => setCollapsed(!collapsed)}
+      /> */}
+      <Sidebar
+        collapsed={collapsed}
+        onClose={closeSidebar}
+        onToggleCollapse={toggleCollapse}
       />
 
       {/* <div className="lg:ml-72 flex min-h-screen flex-col"> */}
@@ -38,11 +55,15 @@ const DashboardLayout = ({ children }) => {
           ${collapsed ? "lg:ml-20" : "lg:ml-72"}
         `}
       >
-        {/* <Navbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} /> */}
-        <Navbar
+        {/* <Navbar
           collapsed={collapsed}
           onToggleCollapse={() => setCollapsed(!collapsed)}
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+        /> */}
+        <Navbar
+          collapsed={collapsed}
+          onToggleCollapse={toggleCollapse}
+          onMenuClick={toggleSidebar}
         />
 
         <main className="flex-1 overflow-y-auto p-6">{children}</main>

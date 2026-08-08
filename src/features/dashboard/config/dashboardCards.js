@@ -44,7 +44,7 @@ export const getDashboardCards = (summary, navigate) => [
         icon: FiActivity,
         iconBg: "bg-purple-100",
         iconColor: "text-purple-600",
-        onClick: () => navigate("/devices?monitoring=true"),
+        onClick: () => navigate("/devices?monitoring=enabled"),
     },
     {
         title: "Monitoring Disabled",
@@ -53,6 +53,26 @@ export const getDashboardCards = (summary, navigate) => [
         icon: FiSlash,
         iconBg: "bg-yellow-100",
         iconColor: "text-yellow-600",
-        onClick: () => navigate("/devices?monitoring=false"),
+        onClick: () => navigate("/devices?monitoring=disabled"),
     },
+    {
+        title: "Critical Devices",
+        value: summary.criticalDevices ?? summary.criticalAlerts ?? 0,
+        subtitle: "Require immediate attention",
+        icon: FiAlertTriangle,
+        iconBg: "bg-red-100",
+        iconColor: "text-red-600",
+        onClick: () => navigate("/devices?critical=true"),
+    },
+    /*
+    {
+        title: "Critical Devices",
+        value: summary.criticalDevices,
+        subtitle: "Require immediate attention",
+        icon: FiAlertTriangle,
+        iconBg: "bg-red-100",
+        iconColor: "text-red-600",
+        onClick: () => navigate("/devices?status=CRITICAL"),
+    },
+    */
 ];

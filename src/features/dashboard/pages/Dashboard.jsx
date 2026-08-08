@@ -1,58 +1,71 @@
 import DashboardLayout from "../components/DashboardLayout";
 import DashboardHeader from "../components/DashboardHeader";
-
 import DashboardStats from "../components/DashboardStats";
-
-import useDashboard from "../hooks/useDashboard";
-import LineChartCard from "../../../components/charts/LineChartCard";
-import AreaChartCard from "../../../components/charts/AreaChartCard";
-import PieChartCard from "../../../components/charts/PieChartCard";
-import NetworkChartCard from "../../../components/charts/NetworkChartCard";
-import RecentAlerts from "../../../components/dashboard/RecentAlerts";
-import RecentLogs from "../../../components/dashboard/RecentLogs";
 import DeviceStatusTable from "../components/DeviceStatusTable";
 
-import {
-  cpuData,
-  memoryData,
-  diskData,
-  networkData,
-  recentAlerts,
-  recentLogs
-} from "../data/dashboardData";
+import DeviceHistoryChart from "../../monitoring/components/DeviceHistoryChart";
+
+import useDashboard from "../hooks/useDashboard";
 import useDashboardDevices from "../hooks/useDashboardDevices";
 
-const Dashboard = () => {
+import RecentAlerts from "../../../components/dashboard/RecentAlerts";
+import RecentLogs from "../../../components/dashboard/RecentLogs";
 
-  const { summary, loading, refresh } = useDashboard();
+import { recentAlerts, recentLogs } from "../data/dashboardData";
+import { useEffect, useMemo, useState } from "react";
+import useDeviceHistory from "../../monitoring/hooks/useDeviceHistory";
+
+const Dashboard = () => {
+  const { summary, loading, refresh, lastUpdated } = useDashboard();
 
   const { devices, loading: devicesLoading } = useDashboardDevices();
 
+  const [selectedDevice, setSelectedDevice] = useState(null);
+
+  const [hours, setHours] = useState(1);
+
+  const [days, setDays] = useState();
+
+  useEffect(() => {
+    if (devices.length > 0 && !selectedDevice) {
+      setSelectedDevice(devices[0].id);
+    }
+  }, [devices]);
+
+  const { history } = useDeviceHistory(selectedDevice, {
+    hours,
+    days,
+  });
+
+  const selectedDeviceDetails = useMemo(() => {
+    if (!selectedDevice) return null;
+    return devices.find((device) => device.id === selectedDevice) ?? null;
+  }, [devices, selectedDevice]);
+  
+
   return (
     <DashboardLayout>
-      <DashboardHeader onRefresh={refresh} loading={loading} />
+      <DashboardHeader
+        onRefresh={refresh}
+        loading={loading}
+        lastUpdated={lastUpdated}
+      />
 
       <DashboardStats summary={summary} />
 
-      {/* Charts */}
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <LineChartCard
-          title="CPU Usage"
-          data={cpuData}
-          dataKey="cpu"
-          color="#2563eb"
+      {/* Resource History */}
+      <div className="mt-8">
+        <DeviceHistoryChart
+          history={history}
+          selectedDevice={selectedDeviceDetails}
+          devices={devices}
+          selectedDeviceId={selectedDevice}
+          onDeviceChange={setSelectedDevice}
+          hours={hours}
+          days={days}
+          onHoursChange={setHours}
+          onDaysChange={setDays}
         />
-
-        <AreaChartCard
-          title="Memory Usage"
-          data={memoryData}
-          dataKey="memory"
-          color="#10b981"
-        />
-
-        <PieChartCard title="Disk Usage" data={diskData} />
-
-        <NetworkChartCard title="Network Traffic" data={networkData} />
       </div>
 
       {/* Alerts & Logs */}
@@ -62,10 +75,6 @@ const Dashboard = () => {
       </div>
 
       {/* Device Status */}
-      {/* <div className="mt-8">
-        <DeviceStatusTable devices={deviceStatus} />
-      </div> */}
-
       <div className="mt-8">
         <DeviceStatusTable devices={devices} loading={devicesLoading} />
       </div>

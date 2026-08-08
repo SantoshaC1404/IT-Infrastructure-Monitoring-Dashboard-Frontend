@@ -17,6 +17,13 @@ class DeviceService extends BaseService {
   /**
    * Get all devices.
    */
+  /*
+  async getAll(signal) {
+    const devices = await super.getAll(signal);
+
+    return toDeviceListModel(devices);
+  }
+    */
   async getAll() {
     const devices = await super.getAll();
 

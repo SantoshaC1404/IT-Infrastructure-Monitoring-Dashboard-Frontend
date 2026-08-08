@@ -1,20 +1,45 @@
 import { useCallback, useEffect, useState } from "react";
 
 import deviceService from "../services/deviceService";
-
 import { showSuccess, showError } from "../../../utils/toast";
 import { DEVICE_MESSAGES } from "../constants/deviceMessages";
 
 const useDevices = () => {
   const [devices, setDevices] = useState([]);
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState(null);
 
   /**
    * Fetch Devices
    */
+  /*
+  const fetchDevices = useCallback(async (signal) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const data = await deviceService.getAll(signal);
+
+      setDevices(data);
+    } catch (err) {
+      // Ignore cancelled requests
+      if (
+        err.name === "CanceledError" ||
+        err.code === "ERR_CANCELED" ||
+        signal?.aborted
+      ) {
+        return;
+      }
+
+      setError(err.message);
+      showError(err.message || "Unable to fetch devices.");
+    } finally {
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
+    }
+  }, []);
+  */
   const fetchDevices = useCallback(async () => {
     try {
       setLoading(true);
@@ -31,66 +56,47 @@ const useDevices = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchDevices();
+  }, [fetchDevices]);
+
+  /**
+   * Initial Load
+   */
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetchDevices(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, [fetchDevices]);
+
   /**
    * Create Device
    */
-  /*
-  const addDevice =
-    (async (values) => {
-      try {
-        console.log("useDevices.addDevice()", values);
-
-        const created = await deviceService.create(values);
-
-        console.log("Created", created);
-
-        setDevices((prev) => [...prev, created]);
-
-        showSuccess("Device added successfully.");
-
-        return created;
-      } catch (err) {
-        console.error("Create Device Error:", err);
-
-        showError(err.message);
-
-        throw err;
-      }
-    },
-    []);
-    */
-  const addDevice = async (payload) => {
-    console.log("useDevices.addDevice()");
-    console.log(payload);
-
+  const addDevice = useCallback(async (payload) => {
     try {
       const device = await deviceService.create(payload);
 
-      console.log("deviceService returned");
-      console.log(device);
-
       setDevices((prev) => [...prev, device]);
 
-      showSuccess("Device added successfully.");
+      showSuccess(DEVICE_MESSAGES.CREATE_SUCCESS);
 
       return device;
     } catch (err) {
-      console.error("Create Device Error:", err);
       showError(err.message || "Unable to add device.");
       throw err;
     }
-  };
+  }, []);
 
   /**
    * Update Device
    */
   const updateDevice = useCallback(async (id, values) => {
     try {
-      console.log("useDevices.updateDevice()", id, values);
-
       const updatedDevice = await deviceService.update(id, values);
-
-      console.log("Updated Device:", updatedDevice);
 
       setDevices((prev) =>
         prev.map((device) => (device.id === id ? updatedDevice : device)),
@@ -100,10 +106,7 @@ const useDevices = () => {
 
       return updatedDevice;
     } catch (err) {
-      console.error("Update Device Error:", err);
-
-      showError(err.message);
-
+      showError(err.message || "Unable to update device.");
       throw err;
     }
   }, []);
@@ -119,10 +122,7 @@ const useDevices = () => {
 
       showSuccess(DEVICE_MESSAGES.DELETE_SUCCESS);
     } catch (err) {
-      console.error("Delete Device Error:", err);
-
-      showError(err.message);
-
+      showError(err.message || "Unable to delete device.");
       throw err;
     }
   }, []);
@@ -132,8 +132,6 @@ const useDevices = () => {
    */
   const testConnection = useCallback(async (values) => {
     try {
-      console.log("Testing Connection:", values);
-
       const result = await deviceService.testConnection(values);
 
       if (result.success) {
@@ -144,36 +142,19 @@ const useDevices = () => {
 
       return result;
     } catch (err) {
-      console.error("Connection Test Error:", err);
-
-      showError(err.message);
-
+      showError(err.message || "Connection test failed.");
       throw err;
     }
   }, []);
 
-  /**
-   * Initial Load
-   */
-  useEffect(() => {
-    fetchDevices();
-  }, [fetchDevices]);
-
   return {
     devices,
-
     loading,
-
     error,
-
     fetchDevices,
-
     addDevice,
-
     updateDevice,
-
     removeDevice,
-
     testConnection,
   };
 };

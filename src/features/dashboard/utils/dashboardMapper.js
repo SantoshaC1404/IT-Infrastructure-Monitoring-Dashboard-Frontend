@@ -1,16 +1,31 @@
-export const toDashboardSummary = (data) => ({
-    totalDevices: data.total_devices,
+export const toDashboardSummary = (data = {}) => ({
+    totalDevices: Number(data.total_devices ?? data.totalDevices ?? 0),
 
-    onlineDevices: data.online_devices,
+    onlineDevices: Number(data.online_devices ?? data.onlineDevices ?? 0),
 
-    offlineDevices: data.offline_devices,
+    offlineDevices: Number(data.offline_devices ?? data.offlineDevices ?? 0),
 
-    monitoringEnabled: data.monitoring_enabled,
+    monitoringEnabled: Number(data.monitoring_enabled ?? data.monitoringEnabled ?? 0),
 
-    monitoringDisabled: data.monitoring_disabled,
+    monitoringDisabled: Number(data.monitoring_disabled ?? data.monitoringDisabled ?? 0),
 
-    deviceTypes: data.device_types ?? {},
+    deviceTypes: data.device_types ?? data.deviceTypes ?? {},
 
+    criticalDevices: Number(
+        data.critical_devices ??
+        data.criticalDevices ??
+        data.critical_alerts ??
+        data.criticalAlerts ??
+        0
+    ),
+
+    criticalAlerts: Number(
+        data.critical_alerts ??
+        data.criticalAlerts ??
+        data.critical_devices ??
+        data.criticalDevices ??
+        0
+    ),
 });
 
 

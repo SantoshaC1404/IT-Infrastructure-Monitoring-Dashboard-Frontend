@@ -1,3 +1,4 @@
+import { memo } from "react";
 import DataTable from "../../../components/common/DataTable";
 import EmptyState from "../../../components/common/EmptyState";
 import useDeviceColumns from "../hooks/useDeviceColumns";
@@ -26,4 +27,4 @@ const DeviceTable = ({ devices, loading, onView, onEdit, onDelete }) => {
   );
 };
 
-export default DeviceTable;
+export default memo(DeviceTable);

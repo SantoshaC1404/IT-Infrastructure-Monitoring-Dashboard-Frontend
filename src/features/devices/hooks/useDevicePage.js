@@ -28,10 +28,17 @@ const useDevicePage = () => {
     const [monitoringFilter, setMonitoringFilter] =
         useState("all");
 
+    const initialCritical =
+        searchParams.get("critical") === "true";
+
+    const [criticalOnly, setCriticalOnly] =
+        useState(initialCritical);
+
     /**
      * Read filters from URL
      */
 
+    /*
     useEffect(() => {
         setStatusFilter(
             searchParams.get("status") || "all",
@@ -39,6 +46,19 @@ const useDevicePage = () => {
 
         setMonitoringFilter(
             searchParams.get("monitoring") || "all",
+        );
+    }, [searchParams]);
+    */
+
+    useEffect(() => {
+        setStatusFilter(searchParams.get("status") || "all");
+
+        setMonitoringFilter(
+            searchParams.get("monitoring") || "all"
+        );
+
+        setCriticalOnly(
+            searchParams.get("critical") === "true"
         );
     }, [searchParams]);
 
@@ -85,6 +105,7 @@ const useDevicePage = () => {
         search,
         statusFilter,
         monitoringFilter,
+        criticalOnly,
     });
 
     /**

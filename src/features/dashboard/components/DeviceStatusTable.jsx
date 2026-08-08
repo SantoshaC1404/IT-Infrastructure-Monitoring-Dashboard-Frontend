@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import Card from "../../../components/common/Card";
 import StatusBadge from "../../../components/common/StatusBadge";
 
@@ -73,4 +75,4 @@ const DeviceStatusTable = ({ devices, loading }) => {
   );
 };
 
-export default DeviceStatusTable;
+export default memo(DeviceStatusTable);

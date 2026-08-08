@@ -1,6 +1,7 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 import dashboardService from "../services/dashboardService";
+import useAutoRefresh from "./useAutoRefresh";
 
 const EMPTY_SUMMARY = {
     totalDevices: 0,
@@ -18,7 +19,15 @@ const useDashboard = () => {
 
     const [error, setError] = useState("");
 
+    const [lastUpdated, setLastUpdated] = useState("-");
+
+    // const loadingRefresh = useRef(false);
+
     const fetchSummary = useCallback(async () => {
+
+        // if (loadingRefresh.current) return;
+
+        // loadingRefresh.current = true;
 
         try {
 
@@ -27,6 +36,9 @@ const useDashboard = () => {
             const data = await dashboardService.getSummary();
 
             setSummary(data);
+
+            const now = new Date().toLocaleTimeString();
+            setLastUpdated(now);
 
             setError("");
 
@@ -41,11 +53,17 @@ const useDashboard = () => {
         fetchSummary();
     }, [fetchSummary]);
 
+    useAutoRefresh({
+        callback: fetchSummary,
+        interval: 30000,
+    });
+
     return {
         summary,
         loading,
         error,
         refresh: fetchSummary,
+        lastUpdated,
     };
 };
 

@@ -1,6 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 
 import dashboardService from "../services/dashboardService";
+import useAutoRefresh from "./useAutoRefresh";
 
 
 
@@ -31,7 +32,12 @@ const useDashboardDevices = () => {
 
     useEffect(() => {
         fetchDevices();
-    }, [fetchDevices]);
+    }, []);
+
+    useAutoRefresh({
+        callback: fetchDevices,
+        interval: 30000,
+    });
 
     return {
         devices,
