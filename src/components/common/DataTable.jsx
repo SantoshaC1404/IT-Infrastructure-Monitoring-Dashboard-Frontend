@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 
 import Card from "./Card";
 import EmptyState from "./EmptyState";
@@ -30,11 +30,20 @@ const DataTable = ({
 
   const [showAll, setShowAll] = useState(false);
 
+  /*
   useEffect(() => {
     setCurrentPage(1);
   }, [data]);
+  */
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data.length]);
 
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  // const totalPages = Math.ceil(data.length / rowsPerPage);
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(data.length / rowsPerPage);
+  }, [data.length, rowsPerPage]);
 
   const displayedRows = useMemo(() => {
     if (showAll) return data;
@@ -181,4 +190,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default memo(DataTable);
