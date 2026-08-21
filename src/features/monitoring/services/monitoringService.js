@@ -1,8 +1,7 @@
 import BaseService from "../../../services/BaseService";
 import * as monitoringApi from "../../../api/monitoringApi";
 
-import { toCriticalDevices, toHistory } from "../utils/monitoringMapper";
-
+import { toHistory } from "../utils/monitoringMapper";
 
 class MonitoringService extends BaseService {
 
@@ -17,26 +16,10 @@ class MonitoringService extends BaseService {
                 filters,
             );
 
-            // console.log("API Response:", response.data);
-
-            // return toHistory(response.data);
-
             const mapped = toHistory(response.data);
-
-            // console.log("Mapped:", mapped);
 
             return mapped;
 
-        } catch (error) {
-            throw this.handleError(error);
-        }
-    }
-
-    // Get critical devices
-    async getCriticalDevices() {
-        try {
-            const response = await monitoringApi.getCriticalDevices();
-            return toCriticalDevices(response?.data ?? {});
         } catch (error) {
             throw this.handleError(error);
         }
