@@ -1,48 +1,44 @@
 import axios from "axios";
+import { getErrorMessage } from "../utils/apiError";
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: {
-        "Content-Type": "application/json",
-    },
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("access_token");
 
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-    return config;
+  return config;
 });
 
 api.interceptors.response.use(
-    (response) => response,
+  (response) => response,
 
-    (error) => {
-        if (error.response) {
-            return Promise.reject({
-                status: error.response.status,
-                message:
-                    error.response.data?.detail ||
-                    error.response.data?.message ||
-                    "Something went wrong.",
-            });
-        }
+  (error) => {
+    if (error.code === "ERR_CANCELED" || error.name === "CanceledError") {
+      return Promise.reject(error);
+    }
 
-        if (error.request) {
-            return Promise.reject({
-                status: 0,
-                message: "Unable to connect to the server. Please check your network.",
-            });
-        }
+    if (error.response?.status === 401) {
+      localStorage.removeItem("access_token");
 
-        return Promise.reject({
-            status: 500,
-            message: error.message,
-        });
-    },
+      if (!window.location.pathname.startsWith("/login")) {
+        window.location.href = "/login";
+      }
+    }
+
+    return Promise.reject({
+      status: error.response?.status ?? 0,
+      message: getErrorMessage(error),
+    });
+  },
 );
 
 export default api;

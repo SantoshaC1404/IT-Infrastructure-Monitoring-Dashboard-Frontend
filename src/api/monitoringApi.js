@@ -2,24 +2,15 @@ import api from "./axios";
 
 const BASE_URL = "/devices";
 
+export const getHistory = (deviceId, params = {}) => {
+  return api.get(`${BASE_URL}/${deviceId}/history`, { params });
+};
 
-// Get history of a device
-export const getHistory = (
-    deviceId,
-    params = {},
-) => {
-    return api.get(`${BASE_URL}/${deviceId}/history`, { params });
-}
-
-
-// Get Critical Devices List
-export const getCriticalDevices = () => {
-    return api.get(`${BASE_URL}/critical`);
-}
-
-// Get monitoring thresholds (backend-provided)
+// Monitoring thresholds (CPU/memory/disk). Configurable via
+// VITE_THRESHOLDS_ENDPOINT since the backend doesn't expose a fixed
+// route for this yet; monitoringService falls back to safe defaults
+// if the request fails.
 export const getThresholds = () => {
-    // Backend may expose thresholds at /monitoring/thresholds or similar;
-    // use a dedicated endpoint under /monitoring for compatibility.
-    return api.get(`/monitoring/thresholds`);
-}
+  const path = import.meta.env.VITE_THRESHOLDS_ENDPOINT || "/monitoring/thresholds";
+  return api.get(path);
+};
