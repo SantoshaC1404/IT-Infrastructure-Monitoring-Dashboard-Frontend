@@ -1,18 +1,26 @@
 import { useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
+
 import { useForm } from "react-hook-form";
+
 import { FiUser, FiMail, FiShield, FiUsers } from "react-icons/fi";
+
 import { toast } from "react-hot-toast";
 
 import { useAuth } from "../../../contexts/AuthContext";
 
 import Input from "../../../components/common/Input";
+
 import PasswordInput from "../../../components/common/PasswordInput";
+
 import Button from "../../../components/common/Button";
+
 import Card from "../../../components/common/Card";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+
   const { register: registerUser } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -36,6 +44,7 @@ const RegisterForm = () => {
       });
 
       toast.success("Account created! Please sign in.");
+
       navigate("/login");
     } catch (error) {
       toast.error(error.message || "Registration failed.");
@@ -46,6 +55,8 @@ const RegisterForm = () => {
 
   return (
     <Card className="w-full max-w-md">
+      {/* Header */}
+
       <div className="mb-8 flex flex-col items-center">
         <div className="mb-4 rounded-full bg-blue-100 p-4">
           <FiShield size={40} className="text-blue-600" />
@@ -58,7 +69,11 @@ const RegisterForm = () => {
         </p>
       </div>
 
+      {/* Registration Form */}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Full Name */}
+
         <Input
           label="Full Name"
           placeholder="Jane Doe"
@@ -66,9 +81,14 @@ const RegisterForm = () => {
           error={errors.fullName?.message}
           {...register("fullName", {
             required: "Full name is required",
-            minLength: { value: 2, message: "Too short." },
+            minLength: {
+              value: 2,
+              message: "Too short.",
+            },
           })}
         />
+
+        {/* Email */}
 
         <Input
           label="Email Address"
@@ -84,6 +104,8 @@ const RegisterForm = () => {
           })}
         />
 
+        {/* Username */}
+
         <Input
           label="Username"
           placeholder="jdoe"
@@ -91,9 +113,14 @@ const RegisterForm = () => {
           error={errors.username?.message}
           {...register("username", {
             required: "Username is required",
-            minLength: { value: 3, message: "At least 3 characters." },
+            minLength: {
+              value: 3,
+              message: "At least 3 characters.",
+            },
           })}
         />
+
+        {/* Password */}
 
         <PasswordInput
           label="Password"
@@ -101,9 +128,14 @@ const RegisterForm = () => {
           error={errors.password?.message}
           {...register("password", {
             required: "Password is required",
-            minLength: { value: 8, message: "At least 8 characters." },
+            minLength: {
+              value: 8,
+              message: "At least 8 characters.",
+            },
           })}
         />
+
+        {/* Role */}
 
         <div>
           <label
@@ -155,12 +187,16 @@ const RegisterForm = () => {
           )}
         </div>
 
+        {/* Login Link */}
+
         <div className="text-sm text-gray-500">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 hover:underline">
             Sign in
           </Link>
         </div>
+
+        {/* Submit Button */}
 
         <Button type="submit" fullWidth loading={loading}>
           Create Account
