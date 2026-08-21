@@ -14,10 +14,12 @@ import RecentLogs from "../../../components/dashboard/RecentLogs";
 import { recentAlerts, recentLogs } from "../data/dashboardData";
 import { useEffect, useMemo, useState } from "react";
 import useDeviceHistory from "../../monitoring/hooks/useDeviceHistory";
+import useCriticalDevices from "../../devices/hooks/useCriticalDevices";
 
 const Dashboard = () => {
   const { summary, loading, refresh, lastUpdated } = useDashboard();
 
+  // const { devices, loading: devicesLoading } = useDashboardDevices();
   const { devices, loading: devicesLoading } = useDashboardDevices();
 
   const [selectedDevice, setSelectedDevice] = useState(null);
@@ -25,6 +27,9 @@ const Dashboard = () => {
   const [hours, setHours] = useState(1);
 
   const [days, setDays] = useState();
+
+  const { devices: criticalDevices, loading: criticalLoading } =
+    useCriticalDevices();
 
   useEffect(() => {
     if (devices.length > 0 && !selectedDevice) {
@@ -41,7 +46,6 @@ const Dashboard = () => {
     if (!selectedDevice) return null;
     return devices.find((device) => device.id === selectedDevice) ?? null;
   }, [devices, selectedDevice]);
-  
 
   return (
     <DashboardLayout>
@@ -51,7 +55,11 @@ const Dashboard = () => {
         lastUpdated={lastUpdated}
       />
 
-      <DashboardStats summary={summary} />
+      {/* <DashboardStats summary={summary} /> */}
+      <DashboardStats
+        summary={summary}
+        criticalCount={criticalDevices.length}
+      />
 
       {/* Resource History */}
       <div className="mt-8">

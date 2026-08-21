@@ -2,9 +2,7 @@ import {
     FiServer,
     FiCheckCircle,
     FiXCircle,
-    FiBox,
     FiAlertTriangle,
-    FiCpu,
     FiActivity,
     FiSlash,
 } from "react-icons/fi";
@@ -19,6 +17,7 @@ export const getDashboardCards = (summary, navigate) => [
         iconColor: "text-blue-600",
         onClick: () => navigate("/devices"),
     },
+
     {
         title: "Online Devices",
         value: summary.onlineDevices,
@@ -26,8 +25,9 @@ export const getDashboardCards = (summary, navigate) => [
         icon: FiCheckCircle,
         iconBg: "bg-green-100",
         iconColor: "text-green-600",
-        onClick: () => navigate("/devices?status=ONLINE"),
+        onClick: () => navigate("/devices?status=online"),
     },
+
     {
         title: "Offline Devices",
         value: summary.offlineDevices,
@@ -35,8 +35,9 @@ export const getDashboardCards = (summary, navigate) => [
         icon: FiXCircle,
         iconBg: "bg-red-100",
         iconColor: "text-red-600",
-        onClick: () => navigate("/devices?status=OFFLINE"),
+        onClick: () => navigate("/devices?status=offline"),
     },
+
     {
         title: "Monitoring Enabled",
         value: summary.monitoringEnabled,
@@ -46,6 +47,7 @@ export const getDashboardCards = (summary, navigate) => [
         iconColor: "text-purple-600",
         onClick: () => navigate("/devices?monitoring=enabled"),
     },
+
     {
         title: "Monitoring Disabled",
         value: summary.monitoringDisabled,
@@ -55,24 +57,14 @@ export const getDashboardCards = (summary, navigate) => [
         iconColor: "text-yellow-600",
         onClick: () => navigate("/devices?monitoring=disabled"),
     },
+
     {
-        title: "Critical Devices",
-        value: summary.criticalDevices ?? summary.criticalAlerts ?? 0,
-        subtitle: "Require immediate attention",
-        icon: FiAlertTriangle,
-        iconBg: "bg-red-100",
-        iconColor: "text-red-600",
-        onClick: () => navigate("/devices?critical=true"),
-    },
-    /*
-    {
-        title: "Critical Devices",
+        title: "Critical Alerts",
         value: summary.criticalDevices,
-        subtitle: "Require immediate attention",
+        subtitle: "Devices requiring attention",
         icon: FiAlertTriangle,
         iconBg: "bg-red-100",
         iconColor: "text-red-600",
-        onClick: () => navigate("/devices?status=CRITICAL"),
+        onClick: () => navigate("/devices?view=critical"),
     },
-    */
 ];
