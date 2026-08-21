@@ -1,26 +1,19 @@
+import { getErrorMessage } from "../utils/apiError";
+
 export default class BaseService {
   constructor(api) {
     this.api = api;
   }
 
-  /**
-   * Get all resources.
-   */
-  async getAll() {
+  async getAll(params) {
     try {
-      const response = await this.api.getAll();
+      const response = await this.api.getAll(params);
       return response.data;
     } catch (error) {
-      if (error.code === "ERR_CANCELED" || error.name === "CanceledError") {
-        throw error;
-      }
       throw this.handleError(error);
     }
   }
 
-  /**
-   * Get resource by id.
-   */
   async getById(id) {
     try {
       const response = await this.api.getById(id);
@@ -30,56 +23,24 @@ export default class BaseService {
     }
   }
 
-  /**
-   * Create resource.
-   */
-  /*
   async create(payload) {
     try {
-      console.log("BaseService.create()", payload);
-
       const response = await this.api.create(payload);
-
-      console.log("BaseService Response", response.data);
-
       return response.data;
     } catch (error) {
       throw this.handleError(error);
     }
   }
-    */
-  async create(payload) {
-    console.log("BaseService.create()");
-    console.log(payload);
 
-    const response = await this.api.create(payload);
-
-    console.log("Axios response");
-    console.log(response);
-
-    return response.data;
-  }
-
-  /**
-   * Update resource.
-   */
   async update(id, payload) {
     try {
-      console.log("BaseService.update()", id, payload);
-
       const response = await this.api.update(id, payload);
-
-      console.log("BaseService Update Response", response.data);
-
       return response.data;
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  /**
-   * Delete resource.
-   */
   async delete(id) {
     try {
       const response = await this.api.delete(id);
@@ -90,44 +51,14 @@ export default class BaseService {
   }
 
   /**
-   * Common error handler.
+   * Common error handler - unwraps an axios/backend error into a
+   * plain Error with a human-readable message.
    */
-  /*
-  handleError(error) {
-    if (error.response) {
-      throw new Error(
-        error.response.data?.message ||
-          error.response.data?.detail ||
-          "Request failed.",
-      );
-    }
-
-    if (error.request) {
-      throw new Error(
-        "Unable to connect to the server. Please check your network.",
-      );
-    }
-
-    throw new Error(error.message || "Unexpected error.");
-  }
-    */
   handleError(error) {
     if (error.code === "ERR_CANCELED" || error.name === "CanceledError") {
       return error;
     }
 
-    if (error.response) {
-      return new Error(
-        error.response.data?.message ||
-        error.response.data?.detail ||
-        "Request failed.",
-      );
-    }
-
-    if (error.request) {
-      return new Error("Unable to connect to the server.");
-    }
-
-    return new Error(error.message || "Unexpected error.");
+    return new Error(getErrorMessage(error));
   }
 }
