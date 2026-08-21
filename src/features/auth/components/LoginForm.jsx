@@ -59,6 +59,7 @@ const LoginForm = () => {
         />
 
         <PasswordInput
+          placeholder="********"
           label="Password"
           error={errors.password?.message}
           {...register("password", { required: "Password is required" })}

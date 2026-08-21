@@ -10,7 +10,7 @@ export const getHistory = (deviceId, params = {}) => {
 // VITE_THRESHOLDS_ENDPOINT since the backend doesn't expose a fixed
 // route for this yet; monitoringService falls back to safe defaults
 // if the request fails.
-export const getThresholds = () => {
-  const path = import.meta.env.VITE_THRESHOLDS_ENDPOINT || "/monitoring/thresholds";
-  return api.get(path);
-};
+// export const getThresholds = () => {
+//   const path = import.meta.env.VITE_THRESHOLDS_ENDPOINT || "/monitoring/thresholds";
+//   return api.get(path);
+// };
