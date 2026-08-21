@@ -13,45 +13,48 @@ import useFilteredDevices from "./useFilteredDevices";
 const useDevicePage = () => {
     const [searchParams] = useSearchParams();
 
-    /**
-     * Search
+    /*
+     * ----------------------------------------
+     * URL Filters
+     * ----------------------------------------
+     */
+
+    const statusFromUrl =
+        searchParams.get("status") || "all";
+
+    const monitoringFromUrl =
+        searchParams.get("monitoring") || "all";
+
+    const criticalFromUrl =
+        searchParams.get("critical") === "true";
+
+    /*
+     * ----------------------------------------
+     * Search & Filters
+     * ----------------------------------------
      */
 
     const [search, setSearch] = useState("");
 
-    /**
-     * Filters
-     */
-
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [statusFilter, setStatusFilter] =
+        useState(statusFromUrl);
 
     const [monitoringFilter, setMonitoringFilter] =
-        useState("all");
-
-    const initialCritical =
-        searchParams.get("critical") === "true";
+        useState(monitoringFromUrl);
 
     const [criticalOnly, setCriticalOnly] =
-        useState(initialCritical);
-
-    /**
-     * Read filters from URL
-     */
+        useState(criticalFromUrl);
 
     /*
+     * ----------------------------------------
+     * Sync URL -> State
+     * ----------------------------------------
+     */
+
     useEffect(() => {
         setStatusFilter(
-            searchParams.get("status") || "all",
+            searchParams.get("status") || "all"
         );
-
-        setMonitoringFilter(
-            searchParams.get("monitoring") || "all",
-        );
-    }, [searchParams]);
-    */
-
-    useEffect(() => {
-        setStatusFilter(searchParams.get("status") || "all");
 
         setMonitoringFilter(
             searchParams.get("monitoring") || "all"
@@ -62,22 +65,28 @@ const useDevicePage = () => {
         );
     }, [searchParams]);
 
-    /**
-     * Details Modal
+    /*
+     * ----------------------------------------
+     * Selected Device
+     * ----------------------------------------
      */
 
     const [selectedDevice, setSelectedDevice] =
         useState(null);
 
-    /**
-     * Delete Modal
+    /*
+     * ----------------------------------------
+     * Delete
+     * ----------------------------------------
      */
 
     const [deviceToDelete, setDeviceToDelete] =
         useState(null);
 
-    /**
+    /*
+     * ----------------------------------------
      * Device API
+     * ----------------------------------------
      */
 
     const {
@@ -90,14 +99,18 @@ const useDevicePage = () => {
         testConnection,
     } = useDevices();
 
-    /**
+    /*
+     * ----------------------------------------
      * Device Modal
+     * ----------------------------------------
      */
 
     const deviceModal = useDeviceModal();
 
-    /**
-     * Filter devices
+    /*
+     * ----------------------------------------
+     * Filtering
+     * ----------------------------------------
      */
 
     const filteredDevices = useFilteredDevices({
@@ -108,8 +121,10 @@ const useDevicePage = () => {
         criticalOnly,
     });
 
-    /**
-     * View Details
+    /*
+     * ----------------------------------------
+     * View
+     * ----------------------------------------
      */
 
     const handleView = useCallback((device) => {
@@ -120,8 +135,10 @@ const useDevicePage = () => {
         setSelectedDevice(null);
     }, []);
 
-    /**
+    /*
+     * ----------------------------------------
      * Delete
+     * ----------------------------------------
      */
 
     const requestDelete = useCallback((device) => {
@@ -140,6 +157,12 @@ const useDevicePage = () => {
         setDeviceToDelete(null);
     }, [deviceToDelete, removeDevice]);
 
+    /*
+     * ----------------------------------------
+     * Return
+     * ----------------------------------------
+     */
+
     return {
         devices: filteredDevices,
 
@@ -154,6 +177,8 @@ const useDevicePage = () => {
 
         monitoringFilter,
         setMonitoringFilter,
+
+        criticalOnly,
 
         selectedDevice,
         handleView,

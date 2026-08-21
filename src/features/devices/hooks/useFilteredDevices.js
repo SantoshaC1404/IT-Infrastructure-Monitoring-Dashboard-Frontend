@@ -6,21 +6,34 @@ const useFilteredDevices = ({
   search = "",
   statusFilter = "all",
   monitoringFilter = "all",
-  criticalOnly,
+  criticalOnly = false,
 }) => {
-
   const keyword = search.trim().toLowerCase();
 
-  const { cpu: CPU_THRESHOLD, memory: MEMORY_THRESHOLD, disk: DISK_THRESHOLD } = useThresholds();
-
-  const isCritical = (device) =>
-    (device.cpu_usage ?? 0) >= (CPU_THRESHOLD ?? 95) ||
-    (device.memory_usage ?? 0) >= (MEMORY_THRESHOLD ?? 90) ||
-    (device.disk_usage ?? 0) >= (DISK_THRESHOLD ?? 90);
+  const {
+    cpu: CPU_THRESHOLD,
+    memory: MEMORY_THRESHOLD,
+    disk: DISK_THRESHOLD,
+  } = useThresholds();
 
   return useMemo(() => {
+    const isCritical = (device) => {
+      const cpu = Number(device.cpu_usage ?? 0);
+      const memory = Number(device.memory_usage ?? 0);
+      const disk = Number(device.disk_usage ?? 0);
+
+      return (
+        cpu >= CPU_THRESHOLD ||
+        memory >= MEMORY_THRESHOLD ||
+        disk >= DISK_THRESHOLD
+      );
+    };
+
     return devices.filter((device) => {
-      // Search only required fields
+      /*
+       * Search
+       */
+
       const matchesSearch =
         keyword === "" ||
         `${device.name ?? ""}
@@ -31,15 +44,28 @@ const useFilteredDevices = ({
           .toLowerCase()
           .includes(keyword);
 
+      /*
+       * Status
+       */
+
       const matchesStatus =
         statusFilter === "all" ||
-        device.status?.toLowerCase() === statusFilter.toLowerCase();
+        device.status?.toLowerCase() ===
+        statusFilter.toLowerCase();
+
+      /*
+       * Monitoring
+       */
 
       const matchesMonitoring =
         monitoringFilter === "all" ||
         (monitoringFilter === "enabled"
           ? device.monitoring_enabled
           : !device.monitoring_enabled);
+
+      /*
+       * Critical
+       */
 
       const matchesCritical =
         !criticalOnly || isCritical(device);
@@ -50,9 +76,17 @@ const useFilteredDevices = ({
         matchesMonitoring &&
         matchesCritical
       );
-      
     });
-  }, [devices, keyword, statusFilter, monitoringFilter, CPU_THRESHOLD, MEMORY_THRESHOLD, DISK_THRESHOLD]);
+  }, [
+    devices,
+    keyword,
+    statusFilter,
+    monitoringFilter,
+    criticalOnly,
+    CPU_THRESHOLD,
+    MEMORY_THRESHOLD,
+    DISK_THRESHOLD,
+  ]);
 };
 
 export default useFilteredDevices;

@@ -9,9 +9,17 @@ import DeviceModal from "../modals/DeviceModal";
 import DeviceDetailsModal from "../modals/DeviceDetailsModal";
 
 import useDevicePage from "../hooks/useDevicePage";
-import Button from "../../../components/common/Button";
+import useCriticalDevices from "../hooks/useCriticalDevices";
+import { useSearchParams } from "react-router-dom";
+import CriticalDevicesTable from "../components/CriticalDevicesTable";
 
 const Device = () => {
+  const [searchParams] = useSearchParams();
+
+  const view = searchParams.get("view") || "all";
+
+  const showCriticalDevices = view === "critical";
+
   const {
     devices,
     loading,
@@ -41,14 +49,25 @@ const Device = () => {
     deviceModal,
   } = useDevicePage();
 
+  const { devices: criticalDevices, loading: criticalLoading } =
+    useCriticalDevices();
+
   return (
     <DashboardLayout>
-      <PageHeader
+      {/* <PageHeader
         title="Devices"
         description="Manage and monitor infrastructure devices."
+      /> */}
+      <PageHeader
+        title={showCriticalDevices ? "Critical Devices" : "Devices"}
+        description={
+          showCriticalDevices
+            ? "Devices exceeding configured resource thresholds."
+            : "Manage and monitor infrastructure devices."
+        }
       />
 
-      <DeviceToolbar
+      {/* <DeviceToolbar
         search={search}
         onSearchChange={setSearch}
         statusFilter={statusFilter}
@@ -56,23 +75,61 @@ const Device = () => {
         onStatusFilterChange={setStatusFilter}
         onMonitoringFilterChange={setMonitoringFilter}
         onAddDevice={deviceModal.openCreate}
-      />
+      /> */}
+      {/* Toolbar only for normal inventory */}
+      {!showCriticalDevices && (
+        <DeviceToolbar
+          search={search}
+          onSearchChange={setSearch}
+          statusFilter={statusFilter}
+          monitoringFilter={monitoringFilter}
+          onStatusFilterChange={setStatusFilter}
+          onMonitoringFilterChange={setMonitoringFilter}
+          onAddDevice={deviceModal.openCreate}
+        />
+      )}
 
-      <DeviceTable
+      {/* <DeviceTable
         devices={devices}
         loading={loading}
+        // criticalOnly={criticalOnly}
         onView={handleView}
         onEdit={deviceModal.openEdit}
         onDelete={requestDelete}
-      />
+      /> */}
+      {/* Critical Devices */}
+      {showCriticalDevices ? (
+        <CriticalDevicesTable
+          devices={criticalDevices}
+          loading={criticalLoading}
+          onView={handleView}
+          onEdit={deviceModal.openEdit}
+          onDelete={requestDelete}
+        />
+      ) : (
+        /* Normal Device Inventory */
+        <DeviceTable
+          devices={devices}
+          loading={loading}
+          onView={handleView}
+          onEdit={deviceModal.openEdit}
+          onDelete={requestDelete}
+        />
+      )}
 
+      {/* <DeviceDetailsModal
+        open={!!selectedDevice}
+        device={selectedDevice}
+        onClose={closeDetails}
+      /> */}
+      {/* Details */}
       <DeviceDetailsModal
         open={!!selectedDevice}
         device={selectedDevice}
         onClose={closeDetails}
       />
 
-      <DeviceModal
+      {/* <DeviceModal
         open={deviceModal.isOpen}
         device={deviceModal.selectedDevice}
         onClose={deviceModal.close}
@@ -97,8 +154,32 @@ const Device = () => {
           return result;
         }}
         onTestConnection={testConnection}
+      /> */}
+      {/* Device Modal */}
+      <DeviceModal
+        open={deviceModal.isOpen}
+        device={deviceModal.selectedDevice}
+        onClose={deviceModal.close}
+        onCreate={async (data) => {
+          return await addDevice(data);
+        }}
+        onUpdate={async (id, data) => {
+          return await updateDevice(id, data);
+        }}
+        onTestConnection={testConnection}
       />
 
+      {/* <ConfirmModal
+        open={!!deviceToDelete}
+        title="Delete Device"
+        message={`Are you sure you want to delete "${deviceToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      /> */}
+      {/* Delete */}
       <ConfirmModal
         open={!!deviceToDelete}
         title="Delete Device"

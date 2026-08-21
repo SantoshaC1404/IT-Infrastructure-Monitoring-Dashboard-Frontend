@@ -98,6 +98,9 @@ export const toDeviceModel = (device) => ({
 
   disk_usage: Number(device.disk_usage ?? 0),
 
+  critical_reason:
+    device.critical_reason ?? null,
+
   login_source: device.login_source,
 
   last_login_time: device.last_login_time,
@@ -105,7 +108,7 @@ export const toDeviceModel = (device) => ({
   last_seen: device.last_seen ?? null,
 
   uptime: device.uptime ?? 0,
-  
+
   created_at: device.created_at,
 
   updated_at: device.updated_at,

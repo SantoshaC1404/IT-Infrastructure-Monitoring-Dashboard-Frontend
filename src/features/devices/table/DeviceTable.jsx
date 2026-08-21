@@ -3,11 +3,19 @@ import DataTable from "../../../components/common/DataTable";
 import EmptyState from "../../../components/common/EmptyState";
 import useDeviceColumns from "../hooks/useDeviceColumns";
 
-const DeviceTable = ({ devices, loading, onView, onEdit, onDelete }) => {
+const DeviceTable = ({
+  devices,
+  loading,
+  criticalOnly,
+  onView,
+  onEdit,
+  onDelete,
+}) => {
   const columns = useDeviceColumns({
     onView,
     onEdit,
     onDelete,
+    criticalOnly,
   });
 
   return (
