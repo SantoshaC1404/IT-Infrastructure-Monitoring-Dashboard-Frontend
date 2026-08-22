@@ -1,21 +1,13 @@
 import { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import { useForm } from "react-hook-form";
-
-import { FiUser, FiMail, FiShield, FiUsers } from "react-icons/fi";
-
+import { FiMail, FiShield, FiUser, FiUsers } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 
 import { useAuth } from "../../../contexts/AuthContext";
-
 import Input from "../../../components/common/Input";
-
 import PasswordInput from "../../../components/common/PasswordInput";
-
 import Button from "../../../components/common/Button";
-
 import Card from "../../../components/common/Card";
 
 const RegisterForm = () => {
