@@ -7,8 +7,16 @@ import { toast } from "react-hot-toast";
 import { useAuth } from "../../../contexts/AuthContext";
 import Input from "../../../components/common/Input";
 import PasswordInput from "../../../components/common/PasswordInput";
+import Select from "../../../components/common/Select";
 import Button from "../../../components/common/Button";
 import Card from "../../../components/common/Card";
+
+const ROLE_OPTIONS = [
+  { label: "Admin", value: "ADMIN" },
+  { label: "User", value: "USER" },
+  { label: "Operator", value: "OPERATOR" },
+  { label: "Viewer", value: "VIEWER" },
+];
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -50,13 +58,13 @@ const RegisterForm = () => {
       {/* Header */}
 
       <div className="mb-8 flex flex-col items-center">
-        <div className="mb-4 rounded-full bg-blue-100 p-4">
+        <div className="mb-4 rounded-full bg-blue-100 p-4 dark:bg-blue-900/30">
           <FiShield size={40} className="text-blue-600" />
         </div>
 
-        <h1 className="text-2xl font-bold">Create Account</h1>
+        <h1 className="text-2xl font-bold text-gray-900 ">Create Account</h1>
 
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
           Register to access IT Monitoring
         </p>
       </div>
@@ -129,61 +137,26 @@ const RegisterForm = () => {
 
         {/* Role */}
 
-        <div>
-          <label
-            htmlFor="role"
-            className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
-            Role
-          </label>
-
-          <div className="relative">
-            <FiUsers
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              size={18}
-            />
-
-            <select
-              id="role"
-              className={`w-full appearance-none rounded-lg border bg-white py-2.5 pl-10 pr-10 text-sm text-gray-900 outline-none transition focus:ring-2 dark:bg-gray-800 dark:text-white ${
-                errors.role
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-gray-300 focus:border-blue-500 focus:ring-blue-500/20 dark:border-gray-600"
-              }`}
-              {...register("role", {
-                required: "Please select a role",
-              })}
-            >
-              <option value="">Select a role</option>
-
-              <option value="ADMIN">Admin</option>
-
-              <option value="USER">User</option>
-
-              <option value="OPERATOR">Operator</option>
-
-              <option value="VIEWER">Viewer</option>
-            </select>
-
-            {/* Dropdown Arrow */}
-
-            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-              ▼
-            </div>
-          </div>
-
-          {/* Validation Error */}
-
-          {errors.role && (
-            <p className="mt-1 text-sm text-red-500">{errors.role.message}</p>
-          )}
-        </div>
+        <Select
+          label="Role"
+          required
+          leftIcon={<FiUsers />}
+          placeholder="Select a role"
+          options={ROLE_OPTIONS}
+          error={errors.role?.message}
+          {...register("role", {
+            required: "Please select a role",
+          })}
+        />
 
         {/* Login Link */}
 
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500 dark:text-gray-400">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link
+            to="/login"
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
             Sign in
           </Link>
         </div>
