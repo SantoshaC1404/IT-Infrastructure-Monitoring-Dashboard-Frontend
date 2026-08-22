@@ -7,7 +7,7 @@ import { ThresholdsProvider } from "../features/monitoring/contexts/ThresholdsCo
 const AppProviders = ({ children }) => {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
 
       <AuthProvider>
         <ThresholdsProvider>{children}</ThresholdsProvider>
