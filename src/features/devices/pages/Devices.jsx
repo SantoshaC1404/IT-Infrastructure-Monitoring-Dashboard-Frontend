@@ -54,10 +54,6 @@ const Device = () => {
 
   return (
     <DashboardLayout>
-      {/* <PageHeader
-        title="Devices"
-        description="Manage and monitor infrastructure devices."
-      /> */}
       <PageHeader
         title={showCriticalDevices ? "Critical Devices" : "Devices"}
         description={
@@ -67,15 +63,6 @@ const Device = () => {
         }
       />
 
-      {/* <DeviceToolbar
-        search={search}
-        onSearchChange={setSearch}
-        statusFilter={statusFilter}
-        monitoringFilter={monitoringFilter}
-        onStatusFilterChange={setStatusFilter}
-        onMonitoringFilterChange={setMonitoringFilter}
-        onAddDevice={deviceModal.openCreate}
-      /> */}
       {/* Toolbar only for normal inventory */}
       {!showCriticalDevices && (
         <DeviceToolbar
@@ -89,22 +76,30 @@ const Device = () => {
         />
       )}
 
-      {/* <DeviceTable
-        devices={devices}
-        loading={loading}
-        // criticalOnly={criticalOnly}
-        onView={handleView}
-        onEdit={deviceModal.openEdit}
-        onDelete={requestDelete}
-      /> */}
       {/* Critical Devices */}
-      {showCriticalDevices ? (
+      {/* {showCriticalDevices ? (
         <CriticalDevicesTable
           devices={criticalDevices}
           loading={criticalLoading}
           onView={handleView}
           onEdit={deviceModal.openEdit}
           onDelete={requestDelete}
+        />
+      ) : (
+        <DeviceTable
+          devices={devices}
+          loading={loading}
+          onView={handleView}
+          onEdit={deviceModal.openEdit}
+          onDelete={requestDelete}
+        />
+      )} */}
+
+      {/* Critical Devices */}
+      {showCriticalDevices ? (
+        <CriticalDevicesTable
+          devices={criticalDevices}
+          loading={criticalLoading}
         />
       ) : (
         /* Normal Device Inventory */
@@ -117,11 +112,6 @@ const Device = () => {
         />
       )}
 
-      {/* <DeviceDetailsModal
-        open={!!selectedDevice}
-        device={selectedDevice}
-        onClose={closeDetails}
-      /> */}
       {/* Details */}
       <DeviceDetailsModal
         open={!!selectedDevice}
@@ -129,32 +119,6 @@ const Device = () => {
         onClose={closeDetails}
       />
 
-      {/* <DeviceModal
-        open={deviceModal.isOpen}
-        device={deviceModal.selectedDevice}
-        onClose={deviceModal.close}
-        onCreate={async (data) => {
-          console.log("Device.jsx onCreate");
-          console.log(data);
-
-          const result = await addDevice(data);
-
-          console.log("Device.jsx addDevice returned");
-          console.log(result);
-
-          return result;
-        }}
-        onUpdate={async (id, data) => {
-          console.log("Device.jsx onUpdate", id, data);
-
-          const result = await updateDevice(id, data);
-
-          console.log("Device.jsx updateDevice returned", result);
-
-          return result;
-        }}
-        onTestConnection={testConnection}
-      /> */}
       {/* Device Modal */}
       <DeviceModal
         open={deviceModal.isOpen}
@@ -169,16 +133,6 @@ const Device = () => {
         onTestConnection={testConnection}
       />
 
-      {/* <ConfirmModal
-        open={!!deviceToDelete}
-        title="Delete Device"
-        message={`Are you sure you want to delete "${deviceToDelete?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        confirmVariant="danger"
-        onCancel={cancelDelete}
-        onConfirm={confirmDelete}
-      /> */}
       {/* Delete */}
       <ConfirmModal
         open={!!deviceToDelete}
