@@ -28,8 +28,8 @@ const Dashboard = () => {
 
   const [days, setDays] = useState();
 
-  const { devices: criticalDevices, loading: criticalLoading } =
-    useCriticalDevices();
+  // const { devices: criticalDevices, loading: criticalLoading } =
+  //   useCriticalDevices();
 
   useEffect(() => {
     if (devices.length > 0 && !selectedDevice) {
@@ -55,11 +55,7 @@ const Dashboard = () => {
         lastUpdated={lastUpdated}
       />
 
-      {/* <DashboardStats summary={summary} /> */}
-      <DashboardStats
-        summary={summary}
-        criticalCount={criticalDevices.length}
-      />
+      <DashboardStats summary={summary} />
 
       {/* Resource History */}
       <div className="mt-8">
