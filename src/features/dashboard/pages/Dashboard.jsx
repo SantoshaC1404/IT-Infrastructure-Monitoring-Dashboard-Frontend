@@ -1,5 +1,7 @@
-import DashboardLayout from "../components/DashboardLayout";
+import { useEffect, useMemo, useState } from "react";
+
 import DashboardHeader from "../components/DashboardHeader";
+import DashboardLayout from "../components/DashboardLayout";
 import DashboardStats from "../components/DashboardStats";
 import DeviceStatusTable from "../components/DeviceStatusTable";
 
@@ -11,10 +13,10 @@ import useDashboardDevices from "../hooks/useDashboardDevices";
 import RecentAlerts from "../../../components/dashboard/RecentAlerts";
 import RecentLogs from "../../../components/dashboard/RecentLogs";
 
-import { recentAlerts, recentLogs } from "../data/dashboardData";
-import { useEffect, useMemo, useState } from "react";
+import { recentLogs } from "../data/dashboardData";
+
+import useAlerts from "../../alert/hooks/useAlerts";
 import useDeviceHistory from "../../monitoring/hooks/useDeviceHistory";
-import useCriticalDevices from "../../devices/hooks/useCriticalDevices";
 
 const Dashboard = () => {
   const { summary, loading, refresh, lastUpdated } = useDashboard();
@@ -28,8 +30,9 @@ const Dashboard = () => {
 
   const [days, setDays] = useState();
 
-  // const { devices: criticalDevices, loading: criticalLoading } =
-  //   useCriticalDevices();
+  const { alerts, loading: alertsLoading } = useAlerts({
+    limit: 5,
+  });
 
   useEffect(() => {
     if (devices.length > 0 && !selectedDevice) {
@@ -74,7 +77,7 @@ const Dashboard = () => {
 
       {/* Alerts & Logs */}
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <RecentAlerts alerts={recentAlerts} />
+        <RecentAlerts alerts={alerts} loading={alertsLoading} />
         <RecentLogs logs={recentLogs} />
       </div>
 

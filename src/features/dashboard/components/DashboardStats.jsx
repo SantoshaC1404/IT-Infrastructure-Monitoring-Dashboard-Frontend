@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import StatsCard from "./StatsCard";
 import { getDashboardCards } from "../config/dashboardCards";
+import StatsCard from "./StatsCard";
 
 const DashboardStats = ({ summary }) => {
   const navigate = useNavigate();

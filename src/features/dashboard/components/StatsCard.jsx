@@ -1,5 +1,3 @@
-import Card from "../../../components/common/Card";
-
 const StatsCard = ({
   title,
   value,
