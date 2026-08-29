@@ -11,6 +11,8 @@ import Users from "../features/users/pages/Users";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
 
+import Alerts from "../features/alert/pages/Alerts";
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -37,36 +39,50 @@ const AppRoutes = () => {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
+          // <ProtectedRoute>
+          //   <Dashboard />
+          // </ProtectedRoute>
+          <Dashboard />
         }
       />
 
       <Route
         path="/devices"
         element={
-          <ProtectedRoute>
-            <Device />
-          </ProtectedRoute>
+          // <ProtectedRoute>
+          //   <Device />
+          // </ProtectedRoute>
+          <Device />
         }
       />
 
       <Route
         path="/devices/critical"
         element={
-          <ProtectedRoute>
-            <CriticalDevices />
-          </ProtectedRoute>
+          // <ProtectedRoute>
+          //   <CriticalDevices />
+          // </ProtectedRoute>
+          <CriticalDevices />
         }
       />
 
       <Route
         path="/users"
         element={
-          <ProtectedRoute>
-            <Users />
-          </ProtectedRoute>
+          // <ProtectedRoute>
+          //   <Users />
+          // </ProtectedRoute>
+          <Users />
+        }
+      />
+
+      <Route
+        path="/alerts"
+        element={
+          // <ProtectedRoute>
+          //   <Alerts />
+          // </ProtectedRoute>
+          <Alerts />
         }
       />
 
