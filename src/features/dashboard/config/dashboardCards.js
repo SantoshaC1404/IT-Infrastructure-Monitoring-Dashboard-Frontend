@@ -1,10 +1,10 @@
 import {
-    FiActivity,
-    FiAlertTriangle,
-    FiCheckCircle,
-    FiServer,
-    FiSlash,
-    FiXCircle,
+  FiActivity,
+  FiAlertTriangle,
+  FiCheckCircle,
+  FiServer,
+  FiSlash,
+  FiXCircle,
 } from "react-icons/fi";
 import { IoNotificationsCircleSharp } from "react-icons/io5";
 
