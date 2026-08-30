@@ -1,36 +1,28 @@
-import BaseService from "../../../services/BaseService";
 import * as alertApi from "../../../api/alertApi";
 
-class AlertService extends BaseService {
-  constructor() {
-    super(alertApi);
+class AlertService {
+  async getAlerts(limit = 100) {
+    const response = await alertApi.getAlerts(limit);
+
+    return response.data ?? [];
   }
 
-  async getOpen() {
-    try {
-      const response = await alertApi.getOpen();
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async getOpenAlerts() {
+    const response = await alertApi.getOpenAlerts();
+
+    return response.data ?? [];
   }
 
-  async acknowledge(id) {
-    try {
-      const response = await alertApi.acknowledge(id);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async acknowledgeAlert(alertId) {
+    const response = await alertApi.acknowledgeAlert(alertId);
+
+    return response.data;
   }
 
-  async resolve(id) {
-    try {
-      const response = await alertApi.resolve(id);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async resolveAlert(alertId) {
+    const response = await alertApi.resolveAlert(alertId);
+
+    return response.data;
   }
 }
 
